@@ -1210,7 +1210,9 @@ function updateCat(c, dt) {
     if (k >= 1) { c.state = 'seek'; c.t = 0; }
   } else if (c.state === 'seek' || c.state === 'wait') {
     let best = -1, bd = 1e9;
-    for (let n = 0; n < b.remaining.length; n++) { const i = b.remaining[n]; if (!isExp(removed, i)) continue; const d = (px(i) - c.x) ** 2 + (py(i) - c.y) ** 2; if (d < bd) { bd = d; best = i; } }
+    const taken = new Set(); game.cats.forEach(o => { if (o !== c && (o.state === 'walk' || o.state === 'chomp') && o.target >= 0) taken.add(o.target); });
+    for (let n = 0; n < b.remaining.length; n++) { const i = b.remaining[n]; if (removed[i] || taken.has(i) || !isExp(removed, i)) continue; const d = (px(i) - c.x) ** 2 + (py(i) - c.y) ** 2; if (d < bd) { bd = d; best = i; } }
+    if (best < 0 && b.remaining.length) for (let i = 0; i < N; i++) { if (removed[i] || art[i] !== b.color || taken.has(i) || !isExp(removed, i)) continue; const d = (px(i) - c.x) ** 2 + (py(i) - c.y) ** 2; if (d < bd) { bd = d; best = i; } }
     if (best >= 0) { if (c.state === 'wait') { P({ type: 'star', x: X(c.x), y: Y(c.y + FEET) - CATU * S * 1.2, vy: -50, vx: 0, size: 5, color: '#ffe066', life: 0.5, vr: 6 }); } c.target = best; c.state = 'walk'; c.t = 0; c.blocked = false; c.run = Math.sqrt(bd) > 9; }
     else { if (c.state !== 'wait') { game.waits++; c.t = 0; } c.state = 'wait'; c.blocked = true; turnTo(c, 0, 1, dt); }
   } else if (c.state === 'walk') {
@@ -1252,7 +1254,7 @@ function updateCat(c, dt) {
   if (c.mv > 0.5 && c.run) { c.dust -= dt; if (c.dust < 0) { c.dust = 0.07; P({ type: 'dust', x: X(c.x) + (Math.random() - 0.5) * 8, y: Y(c.y + FEET) - 2, vx: -c.lookX * 20, vy: -8, size: 3 + Math.random() * 3, life: 0.45 }); } }
 }
 function eat(c) {
-  const i = c.target, rem = c.block.remaining, k = rem.indexOf(i); if (k >= 0) rem.splice(k, 1);
+  const i = c.target, rem = c.block.remaining; let k = rem.indexOf(i); if (k < 0) { k = rem.findIndex(t => removed[t]); if (k < 0) k = rem.findIndex(t => !isExp(removed, t)); if (k < 0) k = 0; } if (k >= 0 && rem.length) rem.splice(k, 1);
   removed[i] = 1; clearTile(i); game.eaten++; hud(); sfx.pop(); const col = PAL[art[i]];
   pieces.push({ i: i, c: c, t: 0, col: art[i] });
   for (let n = 0; n < 4; n++) P({ type: 'crumb', x: X(px(i)), y: Y(py(i)), vx: (Math.random() - 0.5) * 70, vy: -30 - Math.random() * 50, g: 160, size: 2.5 + Math.random() * 2, color: css(col), rot: Math.random() * 6, vr: 8, life: 0.5 });
