@@ -47,5 +47,5 @@
 |---|---|---|
 | Play 앱 아이콘 | app-icon-512.png | 512×512 |
 | Play 대표 그래픽 | feature-graphic-1024x500.png | 1024×500 |
-| Play 휴대폰 스크린샷 | screenshots/android/*.png (7장) | 1080×1920 |
-| App Store 6.9인치 | screenshots/ios/*.png (7장) | 1320×2868 |
+| Play 휴대폰 스크린샷 | screenshots/android/*.jpg (7장) | 1080×1920 |
+| App Store 6.9인치 | screenshots/ios/*.jpg (7장) | 1320×2868 |
