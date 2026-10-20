@@ -1,0 +1,43 @@
+name: Android build
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['web/**', 'android/**', 'capacitor.config.json', 'package.json', '.github/workflows/android.yml']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - run: npm ci
+      - run: npx cap sync android
+      - name: 테스트용 APK (서명 불필요, 폰에 바로 설치 가능)
+        run: cd android && ./gradlew assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: balranyang-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Release AAB
+        env:
+          KS64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          VERSION_CODE: ${{ github.run_number }}
+        run: |
+          if [ -n "$KS64" ]; then
+            echo "$KS64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+            export KEYSTORE_FILE="$RUNNER_TEMP/release.keystore"
+            cd android && ./gradlew bundleRelease --no-daemon
+          else
+            echo "서명 키가 없어 AAB는 건너뜁니다."
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: balranyang-release-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: ignore

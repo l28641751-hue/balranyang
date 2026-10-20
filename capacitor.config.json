@@ -1,0 +1,13 @@
+{
+  "appId": "com.balranyang.game",
+  "appName": "발라냥",
+  "webDir": "web",
+  "backgroundColor": "#0b2c4d",
+  "server": { "androidScheme": "https" },
+  "ios": { "contentInset": "never", "backgroundColor": "#0b2c4d" },
+  "android": { "backgroundColor": "#0b2c4d", "allowMixedContent": false },
+  "plugins": {
+    "SplashScreen": { "launchShowDuration": 800, "backgroundColor": "#0b2c4d", "showSpinner": false },
+    "StatusBar": { "style": "DARK", "backgroundColor": "#0b2c4d", "overlaysWebView": true }
+  }
+}
