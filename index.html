@@ -14,6 +14,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>발라냥</title>
 <meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -543,13 +544,13 @@ const mrng = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ 
 const SCALES = { maj: [0, 2, 4, 5, 7, 9, 11], mix: [0, 2, 4, 5, 7, 9, 10], dor: [0, 2, 3, 5, 7, 9, 10], min: [0, 2, 3, 5, 7, 8, 10] };
 const deg2m = (d, root, sc) => { const o = Math.floor(d / 7); return root + 12 * o + SCALES[sc][d - 7 * o]; };
 /* 레벨 10개 구간(티어)마다 다른 곡: 조·빠르기·악기·리듬·코드 진행이 모두 다르다. prog = 4마디 코드 진행 3종(A / B / 브릿지) */
-const TITLE = { name: 'title', root: 60, sc: 'maj', bpm: 100, swing: 0.14, e: 0.46, lead: 'glock', comp: 'strum', bass: 'walk', drum: 'shuffle', hat: 8, prog: [[0, 4, 5, 3], [3, 4, 2, 5], [5, 3, 0, 4]] };
+const TITLE = { name: 'title', root: 60, sc: 'maj', bpm: 108, swing: 0.14, e: 0.46, lead: 'glock', comp: 'strum', bass: 'walk', drum: 'shuffle', hat: 8, prog: [[0, 4, 5, 3], [3, 4, 2, 5], [5, 3, 0, 4]] };
 const THEMES = [
   { name: 'sunny', root: 60, sc: 'maj', bpm: 112, swing: 0.0, e: 0.5, lead: 'glock', comp: 'stab', bass: 'pump', drum: 'basic', hat: 8, prog: [[0, 5, 3, 4], [3, 4, 2, 5], [5, 3, 0, 4]] },
   { name: 'beach', root: 65, sc: 'maj', bpm: 104, swing: 0.2, e: 0.5, lead: 'steel', comp: 'strum', bass: 'walk', drum: 'shuffle', hat: 8, prog: [[0, 3, 4, 3], [0, 5, 3, 4], [3, 0, 4, 5]] },
-  { name: 'deep', root: 57, sc: 'min', bpm: 92, swing: 0.1, e: 0.42, lead: 'bell', comp: 'pad', bass: 'sub', drum: 'half', hat: 8, sparse: 1, prog: [[0, 5, 2, 6], [0, 3, 6, 2], [5, 3, 0, 4]] },
-  { name: 'surf', root: 55, sc: 'mix', bpm: 128, swing: 0.06, e: 0.62, lead: 'saw', comp: 'stab', bass: 'off', drum: 'four', hat: 16, prog: [[0, 6, 3, 0], [0, 3, 6, 4], [5, 6, 0, 0]] },
-  { name: 'master', root: 62, sc: 'dor', bpm: 138, swing: 0, e: 0.74, lead: 'sq', comp: 'arp', bass: 'drive', drum: 'four', hat: 16, prog: [[0, 6, 5, 6], [0, 3, 4, 0], [0, 5, 6, 4]] }
+  { name: 'deep', root: 57, sc: 'maj', bpm: 100, swing: 0.1, e: 0.42, lead: 'bell', comp: 'pad', bass: 'sub', drum: 'half', hat: 8, sparse: 1, prog: [[0, 5, 2, 6], [0, 3, 6, 2], [5, 3, 0, 4]] },
+  { name: 'surf', root: 55, sc: 'maj', bpm: 120, swing: 0.06, e: 0.62, lead: 'saw', comp: 'stab', bass: 'off', drum: 'four', hat: 16, prog: [[0, 6, 3, 0], [0, 3, 6, 4], [5, 6, 0, 0]] },
+  { name: 'master', root: 62, sc: 'maj', bpm: 126, swing: 0, e: 0.74, lead: 'sq', comp: 'arp', bass: 'drive', drum: 'four', hat: 16, prog: [[0, 6, 5, 6], [0, 3, 4, 0], [0, 5, 6, 4]] }
 ];
 const KEYS = [0, 2, -2, 3, 5, -3, 4, -5, 1, -1]; /* 같은 구간 안에서도 레벨마다 조가 바뀐다 */
 const RH = [[0, 2, 3, 5, 6], [0, 1, 2, 4, 6], [0, 3, 4, 6, 7], [0, 2, 4, 6], [0, 1, 3, 4, 6], [0, 2, 3, 4, 7], [0, 3, 5, 6], [0, 2, 3, 6, 7]];
@@ -557,7 +558,7 @@ const RHS = [[0, 4], [0, 3, 6], [0, 5], [0, 2, 5], [0, 4, 6]];
 const SEC = (k, p, v, e, x) => Object.assign({ k, p, v, e }, x);
 /* 곡 구성: 인트로(4마디) 후 A → A'(하모니) → B(고조) → A(필인) → 브릿지(브레이크다운) 반복, 3바퀴째는 조가 올라간다 */
 const FORM = [SEC('A', 0, 0, 0), SEC('A', 0, 1, 0.08, { cm: 1 }), SEC('B', 1, 2, 0.2, { hi: 1 }), SEC('A', 0, 0, 0.05, { fill: 1 }), SEC('C', 2, 3, -0.2, { brk: 1 })];
-const INTRO = SEC('I', 0, 4, -0.14, { nolead: 1 });
+const INTRO = SEC('I', 0, 4, -0.1, {});
 
 function newSong() {
   if (!ac || !mg || !bgm.th) return;
@@ -644,6 +645,26 @@ function leadNote(T, m, t, len, E, v) {
   else voice({ f, t, d, parts: [['square', 1, 0, 0.55], ['sawtooth', 1, 6, 0.4]], lp: 4400, lp2: 1500, q: 1, v: v * 0.62, dl: 0.3, rv: 0.1 });
 }
 
+/* ---------- 후크: 아기들이 따라 부르는 짧고 반복적인 "냐냐냥" 멜로디 (모든 곡이 같은 멜로디를 공유) ---------- */
+const _ = null;
+const HOOK = {
+  A: [9, 9, 11, _, 9, 9, 11, _,   12, 12, 14, 12, 11, _, _, _,   9, 9, 11, _, 9, 9, 11, _,   8, 9, 8, 7, 7, _, 'M', _],
+  B: [11, _, 11, 12, 14, _, 12, 11,   12, 12, 11, 9, 11, _, _, _,   11, _, 11, 12, 14, 14, 15, 14,   12, 11, 9, 8, 7, _, _, _],
+  C: [9, _, _, _, 11, _, _, _,   12, _, _, _, 11, _, _, _,   9, _, 9, _, 11, _, 11, _,   8, _, 7, _, 7, _, _, _]
+};
+function kidVoice(m, t, d, v) {
+  const A = bgm.sb; if (!A) return; const f = mhz(m), g = ac.createGain(), mix = ac.createGain(), o1 = ac.createOscillator(), o2 = ac.createOscillator(), lfo = ac.createOscillator(), lg = ac.createGain();
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.012); g.gain.setValueAtTime(v * 0.85, t + Math.max(0.03, d * 0.5)); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+  o1.type = 'sawtooth'; o2.type = 'triangle'; [o1, o2].forEach(o => { o.frequency.setValueAtTime(f * 0.93, t); o.frequency.exponentialRampToValueAtTime(f, t + 0.05); });
+  lfo.frequency.value = 6; lg.gain.value = 14; lfo.connect(lg); lg.connect(o1.detune);
+  const b1 = ac.createBiquadFilter(), b2 = ac.createBiquadFilter(); b1.type = b2.type = 'bandpass'; b1.Q.value = 3; b2.Q.value = 4;
+  b1.frequency.setValueAtTime(380, t); b1.frequency.exponentialRampToValueAtTime(900, t + 0.08); b2.frequency.setValueAtTime(1500, t); b2.frequency.exponentialRampToValueAtTime(2000, t + 0.08);
+  const g2 = ac.createGain(); g2.gain.value = 0.55; const g3 = ac.createGain(); g3.gain.value = 0.45;
+  o1.connect(b1); b1.connect(mix); o1.connect(b2); b2.connect(g2); g2.connect(mix); o2.connect(g3); g3.connect(mix); mix.connect(g); g.connect(A.d);
+  const sd = ac.createGain(); sd.gain.value = 0.14; g.connect(sd); sd.connect(A.sd); const sr = ac.createGain(); sr.gain.value = 0.16; g.connect(sr); sr.connect(A.sr);
+  [o1, o2, lfo].forEach(o => { o.start(t); o.stop(t + d + 0.05); });
+}
+
 /* ---------- 멜로디 생성: 같은 시드면 같은 멜로디(곡의 얼굴), 변주 섹션은 시드를 바꿔 생성 ---------- */
 function genLead(T, sec, prog, vv) {
   const r = mrng(bgm.seed * 31 + vv * 977 + 5), sets = (T.sparse || sec.k === 'C') ? RHS : RH, pk = a => a[(r() * a.length) | 0];
@@ -712,14 +733,16 @@ function bgmStep(s, t, E) {
     if ((sec.k === 'B' || e > 0.72) && T.comp !== 'arp' && (i & 1) && !brk && e > 0.4) voice({ f: mhz(chord[(i >> 1) % 3] + 24), t, d: E * 1.4, parts: [['sine', 1, 0, 1], ['triangle', 2, 0, 0.2]], v: 0.04, dl: 0.4, rv: 0.2 });
   }
 
-  /* 리드 멜로디 */
-  if (!sec.nolead && e > 0.3) {
-    const vv = sec.v + ((sec.k !== 'A' || sec.v === 1) && cyc % 2 ? 20 : 0), key = vv + '|' + sec.p;
-    const ld = bgm.cache[key] || (bgm.cache[key] = genLead(T, sec, prog, vv)), n = ld[sb * 8 + i];
-    if (n) {
-      const m = M(n.d); leadNote(T, m, t, n.len, E, 0.15);
-      if (sec.cm || e > 0.85) voice({ f: mhz(M(n.d + 2)), t, d: Math.max(0.12, n.len * E * 0.9), type: 'triangle', v: 0.05, dl: 0.2 });
-      if (m + 12 <= 94) voice({ f: mhz(m + 12), t, d: 0.1, type: 'sine', v: 0.022 });
+  /* 리드 멜로디: 후크 (A / B / 브레이크다운) */
+  if (e > 0.25) {
+    const hk = HOOK[sec.k === 'B' ? 'B' : sec.k === 'C' ? 'C' : 'A'], idx = sb * 8 + i, n = hk[idx];
+    if (n === 'M') { meow(t, M(9)); }
+    else if (n !== null && n !== undefined) {
+      let len = 1; while (len < 2 && hk[(idx + len) % 32] === null) len++;
+      const m = M(n), soft = sec.k === 'I' || sec.k === 'C';
+      kidVoice(m, t, Math.max(0.12, E * (len > 1 ? 1.5 : 0.9)), soft ? 0.1 : 0.17);
+      leadNote(T, m + 12, t, len, E, soft ? 0.05 : 0.07);
+      if (sec.cm || e > 0.85) voice({ f: mhz(M(n + 2)), t, d: Math.max(0.12, len * E * 0.9), type: 'triangle', v: 0.04, dl: 0.2 });
     }
   }
   if (sec.k === 'C' && last && i === 6 && cyc % 2 === 0 && e > 0.25) meow(t, M(c + 7));
