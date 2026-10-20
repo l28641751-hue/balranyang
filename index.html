@@ -12,6 +12,7 @@
 <style>html,body{margin:0}</style>
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>발라냥</title>
 <meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,6 +71,9 @@ svg { display: block; }
 .tag svg { width: 16px; height: 16px; color: var(--sun); }
 .wordmark { margin: 0; font: 400 clamp(72px, 24vw, 116px)/1 var(--font-display); letter-spacing: -0.02em; transform: rotate(-3deg); -webkit-text-stroke: 0.06em var(--ink); paint-order: stroke fill; text-shadow: 0 0.07em 0 rgba(0, 20, 40, 0.45); animation: float 3.2s ease-in-out infinite; }
 .wordmark span:nth-child(1) { color: #ffe066; } .wordmark span:nth-child(2) { color: #ff9f45; } .wordmark span:nth-child(3) { color: #ff7ab8; }
+.wordmark { width: clamp(250px, 80vw, 350px); font-size: 0; line-height: 0; -webkit-text-stroke: 0; text-shadow: none; }
+.wordmark .wm-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.wordmark .wm-svg text { -webkit-text-stroke: 0; text-shadow: none; paint-order: normal; }
 .menu { display: grid; justify-items: center; gap: 14px; margin: 0 -18px -22px; padding: 40px 18px 22px; background: linear-gradient(rgba(3, 26, 48, 0), rgba(3, 26, 48, 0.78) 45%); }
 .menu-row { display: flex; gap: 10px; align-items: center; }
 .total { margin: 0; display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--foam); }
@@ -296,8 +300,8 @@ svg { display: block; }
 .in-flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 8; }
 .intro[data-ph="d"] .in-flash { animation: flash 0.9s ease-out both; }
 @keyframes flash { 0% { opacity: 0.9; } 100% { opacity: 0; } }
-.in-title { position: absolute; left: 0; right: 0; top: 7%; z-index: 7; display: grid; justify-items: center; gap: 6px; pointer-events: none; }
-.in-title .wordmark { filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
+.in-title .wordmark { width: clamp(220px, 68vw, 300px); }
+.in-title { position: absolute; left: 0; right: 0; top: 3.5%; z-index: 7; display: grid; justify-items: center; gap: 6px; pointer-events: none; }
 .in-title p { margin: 0; font: 400 17px/1.2 var(--font-display); color: #fff; letter-spacing: 0.02em; text-shadow: 0 2px 0 rgba(0, 10, 40, 0.7), 0 0 10px rgba(120, 190, 255, 0.7); }
 .intro:not([data-ph="wait"]) .in-title { opacity: 0; transition: opacity 0.4s; }
 .in-cap { position: absolute; left: 0; right: 0; top: 9%; z-index: 7; text-align: center; font: 400 31px/1.2 var(--font-display); color: #fff; -webkit-text-stroke: 4px #0b3a66; paint-order: stroke fill; text-shadow: 0 5px 0 rgba(0, 0, 0, 0.25); padding: 0 14px; text-wrap: balance; pointer-events: none; }
@@ -359,9 +363,60 @@ svg { display: block; }
   </section>
 
 
+  <svg id="wmDefs" aria-hidden="true" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wmG1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe96b"/><stop offset=".55" stop-color="#ffc41f"/><stop offset="1" stop-color="#f59e0b"/></linearGradient>
+    <linearGradient id="wmG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb070"/><stop offset=".55" stop-color="#ff8038"/><stop offset="1" stop-color="#e5581a"/></linearGradient>
+    <linearGradient id="wmG3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9cc4"/><stop offset=".55" stop-color="#ff6aa6"/><stop offset="1" stop-color="#e03a80"/></linearGradient>
+    <radialGradient id="wmPad" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#ffd9e8"/><stop offset=".5" stop-color="#ff8fb8"/><stop offset="1" stop-color="#e2548f"/></radialGradient>
+    <!-- 털 쿠션: 부푼 입체감 + 털 결 + 몽실한 털 테두리 -->
+    <filter id="wmPlush" x="-12%" y="-25%" width="124%" height="160%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.3" numOctaves="2" seed="4" result="fz"/>
+      <feDisplacementMap in="SourceGraphic" in2="fz" scale="3" xChannelSelector="R" yChannelSelector="G" result="shape"/>
+      <feGaussianBlur in="shape" stdDeviation="5" result="bl"/>
+      <feDiffuseLighting in="bl" surfaceScale="9" diffuseConstant="1.1" lighting-color="#ffffff" result="diff"><feDistantLight azimuth="235" elevation="52"/></feDiffuseLighting>
+      <feComposite in="shape" in2="diff" operator="arithmetic" k1="0.95" k2="0.0" k3="0" k4="0.1" result="shaded"/>
+      <feSpecularLighting in="bl" surfaceScale="7" specularConstant="0.9" specularExponent="26" lighting-color="#fff6ee" result="spec"><feDistantLight azimuth="235" elevation="58"/></feSpecularLighting>
+      <feComposite in="spec" in2="shape" operator="in" result="specIn"/>
+      <feComposite in="shaded" in2="specIn" operator="arithmetic" k1="0" k2="1" k3="0.38" k4="0" result="lit"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.1 0.6" numOctaves="3" seed="11" result="gr"/>
+      <feColorMatrix in="gr" type="matrix" values="0 0 0 0 1  0 0 0 0 0.97  0 0 0 0 0.9  0 0 0 2.2 -1.2" result="hairL"/>
+      <feColorMatrix in="gr" type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.12  0 0 0 0 0.2  0 0 0 -2.6 1.18" result="hairD"/>
+      <feComposite in="hairL" in2="shape" operator="in" result="hairLi"/>
+      <feComposite in="hairD" in2="shape" operator="in" result="hairDi"/>
+      <feComponentTransfer in="hairDi" result="hairDi2"><feFuncA type="linear" slope="0.22"/></feComponentTransfer>
+      <feComponentTransfer in="hairLi" result="hairLi2"><feFuncA type="linear" slope="0.45"/></feComponentTransfer>
+      <feMorphology in="shape" operator="dilate" radius="4" result="dil"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="21" result="fz2"/>
+      <feDisplacementMap in="dil" in2="fz2" scale="8" xChannelSelector="G" yChannelSelector="R" result="rimShape"/>
+      <feFlood flood-color="#fff4e4" result="cream"/>
+      <feComposite in="cream" in2="rimShape" operator="in" result="rim"/>
+      <feGaussianBlur in="rimShape" stdDeviation="5" result="shB"/>
+      <feOffset in="shB" dy="9" result="shO"/>
+      <feFlood flood-color="#4a1634" flood-opacity=".5" result="shc"/>
+      <feComposite in="shc" in2="shO" operator="in" result="shadow"/>
+      <feGaussianBlur in="rim" stdDeviation="0.7" result="rim"/><feMerge><feMergeNode in="shadow"/><feMergeNode in="rim"/><feMergeNode in="lit"/><feMergeNode in="hairDi2"/><feMergeNode in="hairLi2"/></feMerge>
+    </filter>
+    <!-- 젤리(발바닥 말랑이) -->
+    <filter id="wmJelly" x="-30%" y="-30%" width="160%" height="170%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="b"/>
+      <feSpecularLighting in="b" surfaceScale="5" specularConstant="1.2" specularExponent="30" lighting-color="#fff" result="sp"><feDistantLight azimuth="235" elevation="60"/></feSpecularLighting>
+      <feComposite in="sp" in2="SourceAlpha" operator="in" result="spi"/>
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="sb"/><feOffset in="sb" dy="4" result="so"/><feFlood flood-color="#4a1634" flood-opacity=".4"/><feComposite in2="so" operator="in" result="sd"/>
+      <feMerge><feMergeNode in="sd"/><feMergeNode in="SourceGraphic"/><feMergeNode in="spi"/></feMerge>
+    </filter>
+    <g id="wmPaw">
+      <ellipse cx="0" cy="9" rx="15" ry="12.5" fill="url(#wmPad)"/>
+      <ellipse cx="-17" cy="-9" rx="6.6" ry="8.2" fill="url(#wmPad)" transform="rotate(-24 -17 -9)"/>
+      <ellipse cx="-6" cy="-19" rx="6.6" ry="8.6" fill="url(#wmPad)" transform="rotate(-8 -6 -19)"/>
+      <ellipse cx="7" cy="-19" rx="6.6" ry="8.6" fill="url(#wmPad)" transform="rotate(8 7 -19)"/>
+      <ellipse cx="18" cy="-9" rx="6.6" ry="8.2" fill="url(#wmPad)" transform="rotate(24 18 -9)"/>
+    </g>
+  </defs>
+</svg>
   <section class="intro" id="intro" data-ph="wait" aria-label="오프닝">
     <div class="in-world" id="inWorld"></div>
-    <div class="in-title"><h1 class="wordmark"><span>발</span><span>라</span><span>냥</span></h1><p>바닷속으로 물고기를 잡으러 가요!</p></div>
+    <div class="in-title"><h1 class="wordmark" aria-label="발라냥"><svg class="wm-svg" viewBox="0 0 400 190" role="img" aria-label="발라냥"><g filter="url(#wmPlush)" font-family="Jua, 'Gowun Dodum', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif" font-size="122" text-anchor="middle" stroke-width="5" stroke-linejoin="round"><text x="82" y="136" fill="url(#wmG1)" stroke="#ffc41f" transform="rotate(-6 82 100)">발</text><text x="200" y="126" fill="url(#wmG2)" stroke="#ff8038">라</text><text x="318" y="136" fill="url(#wmG3)" stroke="#ff6aa6" transform="rotate(6 318 100)">냥</text></g><g filter="url(#wmJelly)"><use href="#wmPaw" transform="translate(30 38) rotate(-22) scale(.62)"/><use href="#wmPaw" transform="translate(372 160) rotate(20) scale(.7)"/></g></svg></h1><p>바닷속으로 물고기를 잡으러 가요!</p></div>
     <div class="in-cap" id="inCap"></div>
     <div class="in-flash"></div>
     <button class="in-start" id="inStart" type="button">화면을 터치하면 시작!</button>
@@ -371,7 +426,7 @@ svg { display: block; }
   <section class="screen title" id="title">
     <div class="logo" id="logo">
       <div class="tag" id="tagline"></div>
-      <h1 class="wordmark" aria-label="발라냥"><span>발</span><span>라</span><span>냥</span></h1>
+      <h1 class="wordmark" aria-label="발라냥"><svg class="wm-svg" viewBox="0 0 400 190" role="img" aria-label="발라냥"><g filter="url(#wmPlush)" font-family="Jua, 'Gowun Dodum', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif" font-size="122" text-anchor="middle" stroke-width="5" stroke-linejoin="round"><text x="82" y="136" fill="url(#wmG1)" stroke="#ffc41f" transform="rotate(-6 82 100)">발</text><text x="200" y="126" fill="url(#wmG2)" stroke="#ff8038">라</text><text x="318" y="136" fill="url(#wmG3)" stroke="#ff6aa6" transform="rotate(6 318 100)">냥</text></g><g filter="url(#wmJelly)"><use href="#wmPaw" transform="translate(30 38) rotate(-22) scale(.62)"/><use href="#wmPaw" transform="translate(372 160) rotate(20) scale(.7)"/></g></svg></h1>
     </div>
     <div class="menu" id="menu">
       <button class="btn big" id="btnPlay" type="button"></button>
