@@ -581,7 +581,48 @@ function musicBus() {
   if (!bgm.sb) newSong();
   return mg;
 }
-function setMusicLevel(l) { bgm.lvl = l; if (ac && mg) mg.gain.setTargetAtTime(0.9 * l, ac.currentTime, 0.35); }
+/* ---- 녹음된 곡 재생: 실시간 합성이 게임 화면과 CPU를 다투지 않아 중간에 끊기지 않는다. 파일을 못 불러오면 합성음으로 대신한다. ---- */
+const MUS = {"t": {"f": "title.mp3", "intro": 8.8889, "end": 97.7778}, "g0": {"f": "game0.mp3", "intro": 8.5714, "end": 94.2857}, "g1": {"f": "game1.mp3", "intro": 9.2308, "end": 101.5385}, "g2": {"f": "game2.mp3", "intro": 9.6, "end": 105.6}, "g3": {"f": "game3.mp3", "intro": 8, "end": 88}, "g4": {"f": "game4.mp3", "intro": 7.619, "end": 83.8095}};
+const mus = { raw: {}, buf: {}, bad: {}, ld: {}, cur: null, bus: null, on: false };
+const musKey = () => bgm.scene === 'game' ? 'g' + Math.min(4, Math.floor(bgm.idx / 10)) : 't';
+function musRaw(k) { return mus.raw[k] || (mus.raw[k] = fetch('music/' + MUS[k].f).then(r => { if (!r.ok) throw 0; return r.arrayBuffer(); })); }
+function musLoad(k) {
+  return mus.ld[k] || (mus.ld[k] = musRaw(k).then(ab => new Promise((ok, no) => { const p = ac.decodeAudioData(ab.slice(0), ok, no); if (p && p.catch) p.catch(no); })).then(b => (mus.buf[k] = b)).catch(() => { mus.bad[k] = 1; return null; }));
+}
+function musBus() {
+  if (!mus.bus && ac) { const f = ac.createBiquadFilter(), g = ac.createGain(); f.type = 'lowpass'; f.frequency.value = 16000; f.Q.value = 0.5; g.gain.value = 0.9 * bgm.lvl; f.connect(g); g.connect(ac.destination); mus.bus = { f, g }; }
+  return mus.bus;
+}
+function musStop(fade) {
+  const P = mus.cur; if (!P) return; mus.cur = null; clearInterval(P.tm);
+  const t = ac.currentTime; try { P.g.gain.cancelScheduledValues(t); P.g.gain.setValueAtTime(Math.max(P.g.gain.value, 0.0001), t); P.g.gain.linearRampToValueAtTime(0.0001, t + fade); } catch (e) {}
+  P.srcs.forEach(s => { try { s.stop(t + fade + 0.05); } catch (e) {} });
+  setTimeout(() => { try { P.g.disconnect(); } catch (e) {} }, (fade + 0.3) * 1000);
+}
+function musPlay() {
+  if (!ac || !save.music) return; const k = musKey();
+  if (mus.cur && mus.cur.k === k) return;
+  const b = mus.buf[k];
+  if (!b) { musLoad(k).then(r => { if (musKey() !== k) return; if (r) musPlay(); else startMusic(); }); return; }
+  if (bgm.timer) { clearInterval(bgm.timer); bgm.timer = null; }
+  const bus = musBus(), M = MUS[k], now = ac.currentTime + 0.06, loopLen = M.end - M.intro;
+  musStop(0.7);
+  const g = ac.createGain(); g.gain.setValueAtTime(0.0001, now); g.gain.linearRampToValueAtTime(1, now + 0.6); g.connect(bus.f);
+  const P = { k, g, srcs: [], nx: now + M.end, tm: 0 };
+  const go = (when, off) => { const s = ac.createBufferSource(); s.buffer = b; s.connect(g); s.start(when, off); P.srcs.push(s); s.onended = () => { const i = P.srcs.indexOf(s); if (i >= 0) P.srcs.splice(i, 1); try { s.disconnect(); } catch (e) {} }; };
+  const top = () => { while (P.nx < ac.currentTime + loopLen * 1.6) { go(P.nx, M.intro); P.nx += loopLen; } };
+  go(now, 0); top();
+  P.tm = setInterval(() => {
+    if (!save.music) { musStop(0.5); return; }
+    top(); let cm = false; try { cm = bgm.scene === 'game' && (!game || game.state !== 'play' || paused); } catch (e) {}
+    bus.f.frequency.setTargetAtTime(cm ? 1800 : 16000, ac.currentTime, 0.25);
+  }, 400);
+  mus.cur = P;
+  if (bgm.scene === 'game' && bgm.idx % 10 >= 6) { const nk = 'g' + (Math.floor(bgm.idx / 10) + 1); if (MUS[nk]) musRaw(nk).catch(() => {}); }
+}
+try { musRaw('t').catch(() => {}); } catch (e) {}
+document.addEventListener('visibilitychange', () => { if (!ac) return; try { if (document.hidden) { if (ac.state === 'running') ac.suspend(); } else if (ac.state === 'suspended') ac.resume(); } catch (e) {} });
+function setMusicLevel(l) { bgm.lvl = l; if (ac && mg) mg.gain.setTargetAtTime(0.9 * l, ac.currentTime, 0.35); if (ac && mus.bus) mus.bus.g.gain.setTargetAtTime(0.9 * l, ac.currentTime, 0.35); }
 /* 장면 전환: 'title' 또는 ('game', 레벨번호). 같은 레벨 재도전이면 음악이 끊기지 않고 이어진다. */
 function setMusicScene(scene, idx) {
   idx = idx | 0; const key = scene === 'game' ? 'g' + idx : 't';
@@ -592,7 +633,7 @@ function setMusicScene(scene, idx) {
   bgm.tr = scene === 'game' ? KEYS[idx % 10] : 0;
   bgm.seed = scene === 'game' ? (idx + 1) * 7919 + tier * 131 + 17 : 4242;
   bgm.cache = {}; bgm.step = 0;
-  if (ac && mg) newSong();
+  if (ac && mus.on && !mus.bad[musKey()]) musPlay(); else if (ac && mg) newSong();
 }
 
 /* ---------- 소리 부품 ---------- */
@@ -678,6 +719,12 @@ function genLead(T, sec, prog, vv) {
   return out;
 }
 
+function gameHook(T, sec, cyc) {
+  const vv = sec.v + (cyc % 3 ? 7 : 0), key = sec.k + '|' + sec.p + '|' + vv;
+  if (!bgm.cache[key]) bgm.cache[key] = genLead(T, sec, T.prog[sec.p], vv).map(o => o ? o.d : null);
+  return bgm.cache[key];
+}
+
 /* ---------- 한 박자(8분음표) 연주 ---------- */
 function bgmStep(s, t, E) {
   const T = bgm.th, bar = s >> 3, i = s & 7, lb = bar - 4;
@@ -729,20 +776,20 @@ function bgmStep(s, t, E) {
 
   /* 리드 멜로디: 후크 (A / B / 브레이크다운) */
   if (e > 0.25) {
-    const hk = HOOK[sec.k === 'B' ? 'B' : sec.k === 'C' ? 'C' : 'A'], idx = sb * 8 + i, n = hk[idx];
+    const G = bgm.scene === 'game', hk = G ? gameHook(T, sec, cyc) : HOOK[sec.k === 'B' ? 'B' : sec.k === 'C' ? 'C' : 'A'], idx = sb * 8 + i, n = hk[idx];
     if (n === 'M') { meow(t, M(9)); }
     else if (n !== null && n !== undefined) {
       let len = 1; while (len < 2 && hk[(idx + len) % 32] === null) len++;
       const m = M(n), soft = sec.k === 'I' || sec.k === 'C';
-      kidVoice(m, t, Math.max(0.12, E * (len > 1 ? 1.5 : 0.9)), soft ? 0.1 : 0.17);
-      leadNote(T, m + 12, t, len, E, soft ? 0.05 : 0.07);
+      if (!G) kidVoice(m, t, Math.max(0.12, E * (len > 1 ? 1.5 : 0.9)), soft ? 0.1 : 0.17);
+      leadNote(T, G ? m : m + 12, t, len, E, G ? (soft ? 0.09 : 0.13) : (soft ? 0.05 : 0.07));
       if (sec.cm || e > 0.85) voice({ f: mhz(M(n + 2)), t, d: Math.max(0.12, len * E * 0.9), type: 'triangle', v: 0.04, dl: 0.2 });
     }
   }
-  if (sec.k === 'C' && last && i === 6 && cyc % 2 === 0 && e > 0.25) meow(t, M(c + 7));
+  if (sec.k === 'C' && last && i === 6 && cyc % 2 === 0 && e > 0.25 && bgm.scene !== 'game') meow(t, M(c + 7));
 }
 function startMusic() {
-  if (!ac || !save.music) return; if (!bgm.th) setMusicScene(bgm.scene, bgm.idx); musicBus(); if (bgm.timer) return;
+  if (!ac || !save.music) return; if (!bgm.th) setMusicScene(bgm.scene, bgm.idx); mus.on = true; if (!mus.bad[musKey()]) { musPlay(); return; } musicBus(); if (bgm.timer) return;
   bgm.next = ac.currentTime + 0.08;
   bgm.timer = setInterval(() => {
     if (!ac || !save.music || document.hidden) { if (ac) bgm.next = Math.max(bgm.next, ac.currentTime + 0.05); return; }
