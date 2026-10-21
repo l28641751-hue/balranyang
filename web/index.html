@@ -100,9 +100,9 @@ svg { display: block; }
 /* HUD */
 .hud { position: absolute; left: 0; right: 0; top: 0; z-index: 5; display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 12px 12px 8px; }
 .sign { position: relative; display: grid; gap: 5px; min-width: 0; padding: 7px 12px 9px; border-radius: 16px;   background: linear-gradient(rgba(210, 252, 255, 0.26), rgba(0, 40, 72, 0.3)), var(--wood, #2a8fb0) center / cover; border: 3px solid #0f4f6e; box-shadow: 0 4px 0 #0a3550, 0 9px 12px rgba(0, 0, 0, 0.35), inset 0 2px 0 rgba(225, 255, 255, 0.6), inset 0 -3px 0 rgba(0, 35, 65, 0.3); }
-.sign::before, .sign::after { content: ""; position: absolute; top: 5px; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffffff, #7fb4cf 70%); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5); }
-.sign::before { left: 5px; } .sign::after { right: 5px; }
-.lvl-name { font: 400 18px/1 var(--font-display); text-align: center; color: #fff; -webkit-text-stroke: 2px #7a431a; paint-order: stroke fill; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.signold::before, .signold::after { content: ""; position: absolute; top: 5px; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffffff, #7fb4cf 70%); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5); }
+.signold::before { left: 5px; } .signold::after { right: 5px; }
+.lvl-name { font: 400 18px/1 var(--font-display); text-align: center; color: #7a431a; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .meter { position: relative; height: 20px; border-radius: 12px; overflow: hidden; background: #7a431a; border: 2px solid #6a3815; box-shadow: inset 0 3px 4px rgba(0, 0, 0, 0.35); }
 .meter-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 10px; background: linear-gradient(#ffd96a, #ff8a3d); transition: width 0.25s; box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.45); }
 .meter-label { position: absolute; inset: 0; display: flex; gap: 6px; align-items: center; justify-content: center; font-size: 12px; font-variant-numeric: tabular-nums; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7); }
@@ -111,8 +111,8 @@ svg { display: block; }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
 
 /* deck */
-.deck { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 24px 12px 12px; background: linear-gradient(to top, rgba(22, 118, 190, 0.5) 62%, rgba(22, 118, 190, 0)); }
-.slots { display: grid; justify-content: center; gap: 8px; width: 100%; margin-top: 16px; padding: 18px 10px 9px; border-radius: 20px; background: linear-gradient(rgba(210, 252, 255, 0.24), rgba(0, 40, 72, 0.34)), var(--wood, #2a8fb0) center / cover; border: 3px solid #0f4f6e; box-shadow: 0 5px 0 #0a3550, 0 11px 16px rgba(0, 0, 0, 0.4), inset 0 2px 0 rgba(225, 255, 255, 0.55); }
+.deck { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 4px 12px 12px; background: linear-gradient(to top, rgba(22, 118, 190, 0.5) 62%, rgba(22, 118, 190, 0)); }
+.slots { display: grid; justify-content: center; gap: 8px; width: 100%; margin-top: 12px; padding: 18px 10px 9px; border-radius: 20px; background: linear-gradient(rgba(210, 252, 255, 0.24), rgba(0, 40, 72, 0.34)), var(--wood, #2a8fb0) center / cover; border: 3px solid #0f4f6e; box-shadow: 0 5px 0 #0a3550, 0 11px 16px rgba(0, 0, 0, 0.4), inset 0 2px 0 rgba(225, 255, 255, 0.55); }
 .slot { position: relative; aspect-ratio: 1 / 1.02; border-radius: 15px; background: rgba(4, 38, 66, 0.55); box-shadow: inset 0 4px 9px rgba(0, 0, 0, 0.6), inset 0 -2px 0 rgba(180, 240, 255, 0.3); animation: pop 0.3s ease-out; }
 .slot.filled { background: radial-gradient(circle at 50% 78%, rgba(160, 240, 255, 0.3), rgba(4, 38, 66, 0.55) 75%); }
 .slot .face { position: absolute; left: 50%; bottom: 0; width: 104%; height: 100%; object-fit: contain; object-position: 50% 100%; transform: translateX(-50%); transform-origin: 50% 100%; pointer-events: none; filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.45)); }
@@ -129,14 +129,14 @@ svg { display: block; }
 .boost .rbtn svg { width: 26px; height: 26px; }
 .cnt { position: absolute; right: -4px; top: -4px; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 11px; background: #ff4d6d; color: #fff; display: grid; place-items: center; font: 400 13px/1 var(--font-display); border: 2px solid #fff; }
 .boost small { font-size: 11px; color: var(--muted); }
-.queue-wrap { position: relative; width: calc(var(--cols) * var(--bw) + (var(--cols) - 1) * var(--gap)); height: calc(38px + 2 * (var(--bh) + 28px) + var(--bh) * 0.5); overflow: hidden; -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
+.queue-wrap { position: relative; width: calc(var(--cols) * var(--bw) + (var(--cols) - 1) * var(--gap)); height: calc(38px + 2 * (var(--bh) + 26px) + var(--bh) * 0.35); overflow: hidden; -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
 .queue { position: relative; width: 100%; height: 100%; }
 
 /* cat button: portrait + number bubble over the head */
 .blk { position: absolute; width: var(--bw); height: var(--bh); border: 0; padding: 0; color: #fff; background: transparent; cursor: pointer; filter: drop-shadow(0 5px 4px rgba(0, 25, 45, 0.4)); }
 .blk .face { position: absolute; left: 50%; bottom: 0; width: 108%; height: 100%; max-width: none; object-fit: contain; object-position: 50% 100%; transform: translateX(-50%); pointer-events: none; }
 .bub, .slot .bub { position: absolute; left: 0; top: 0; width: 30px; height: 34px; z-index: 3; display: grid; place-items: center; background: center / 100% 100% no-repeat; color: #fff; font: 400 15px/1 var(--font-display); font-variant-numeric: tabular-nums; text-align: center; text-shadow: 0 1px 2px rgba(0, 20, 50, 0.45); filter: drop-shadow(0 3px 2px rgba(0, 25, 55, 0.3)); pointer-events: none; transform: none; min-width: 0; padding: 0; border-radius: 0; box-shadow: none; }
-.queue .blk { left: calc(var(--col) * (var(--bw) + var(--gap))); top: calc(38px + var(--row) * (var(--bh) + 28px)); transition: top 0.38s cubic-bezier(0.3, 1.3, 0.5, 1), transform 0.12s; animation: pop 0.35s ease-out both; }
+.queue .blk { left: calc(var(--col) * (var(--bw) + var(--gap))); top: calc(38px + var(--row) * (var(--bh) + 26px)); transition: top 0.38s cubic-bezier(0.3, 1.3, 0.5, 1), transform 0.12s; animation: pop 0.35s ease-out both; }
 .queue .blk.front:active { transform: translateY(3px) scale(0.97); }
 .queue .blk.back { cursor: default; filter: drop-shadow(0 3px 3px rgba(0, 25, 45, 0.35)); }
 .queue .blk.back .face { filter: saturate(0.9) brightness(0.84); }
@@ -330,6 +330,11 @@ svg { display: block; }
 
 .sec-h { margin: 6px 0 0; font: 400 17px/1.2 var(--font-display); color: #fff; grid-column: 1 / -1; }
 .toyimg { width: 64px; height: 64px; }
+.sign { background: none !important; border: 0 !important; box-shadow: none !important; padding: 8px 14px 11px; }
+.sign::before { content: ""; position: absolute; inset: -14px -12px -16px -12px; left: -12px; top: -14px; width: auto; height: auto; border-radius: 0; background: var(--skin, linear-gradient(#ffe6c8, #f6b98a)) center / 100% 100% no-repeat; box-shadow: none; z-index: 0; pointer-events: none; }
+.sign::after { display: none; }
+.sign > * { position: relative; z-index: 1; }
+.meter { border-color: #b4693a; background: #8a4a22; box-shadow: inset 0 3px 4px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.7); }
 </style>
 
 <main class="app" id="app" data-mode="title">
@@ -471,7 +476,7 @@ svg { display: block; }
 'use strict';
 
 /* ================= constants ================= */
-const W = 30, H = 24, N = W * H, FR = 1.5, HOLE = 4.6, FEET = 2.3, CATU = 4.0, REACH = 1.7, HOUSEX = W - 3.1;
+const W = 30, H = 24, N = W * H, FR = 0.7, HOLE = 3.95, FEET = 2.3, CATU = 4.0, REACH = 1.7, HOUSEX = W - 3.1;
 const PAL = [0x7fd3f7, 0x4fb4ee, 0x2f86d8, 0xff8a3d, 0xe8582a, 0xffd84a, 0xffffff, 0xff7ab8, 0x55d06a, 0xa46cf0, 0xf3e1bd, 0x2b3050];
 const NC = PAL.length;
 const NAMES = ['하늘색', '파랑', '진파랑', '주황', '진주황', '노랑', '흰색', '분홍', '초록', '보라', '모래', '먹색'];
@@ -543,6 +548,43 @@ function tone(f, d, type, v, f2, when, bus) {
   o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + d + 0.03);
 }
 let biteN = 0, biteT = 0, biteNz = null;
+/* ---- 고양이 울음소리: 고양이마다 음높이·음색이 다르고, 상황마다 소리가 다르다 ---- */
+const VOICE = [[1.0, 0.5], [0.82, 0.8], [1.22, 0.3], [0.95, 0.65], [1.32, 0.2], [0.78, 0.9], [1.1, 0.4], [1.46, 0.1], [0.9, 0.75], [1.05, 0.55]];
+let catT = 0, catNz = null;
+function meowSynth(o) {
+  if (!ac || !save.sound) return;
+  const t0 = ac.currentTime + (o.at || 0), d = o.dur, out = ac.destination;
+  const osc = ac.createOscillator(); osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(o.f[0][1], t0); for (let i = 1; i < o.f.length; i++) osc.frequency.linearRampToValueAtTime(o.f[i][1], t0 + o.f[i][0] * d);
+  const lfo = ac.createOscillator(), lg = ac.createGain(); lfo.frequency.value = o.vib || 6; lg.gain.value = o.f[0][1] * 0.018; lfo.connect(lg); lg.connect(osc.frequency);
+  const env = ac.createGain(); env.gain.setValueAtTime(0.0001, t0); env.gain.exponentialRampToValueAtTime(o.vol, t0 + Math.min(0.05, d * 0.25)); env.gain.setValueAtTime(o.vol, t0 + d * 0.55); env.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
+  [[o.f1, 1, 6], [o.f2, 0.55, 9]].forEach(a => { const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = a[2]; bp.frequency.setValueAtTime(a[0][0], t0); bp.frequency.linearRampToValueAtTime(a[0][1], t0 + d * 0.8); const gg = ac.createGain(); gg.gain.value = a[1] * 2.2; osc.connect(bp); bp.connect(gg); gg.connect(env); });
+  env.connect(out); osc.start(t0); lfo.start(t0); osc.stop(t0 + d + 0.05); lfo.stop(t0 + d + 0.05);
+  if (o.breath) { if (!catNz) { const L = Math.floor(ac.sampleRate * 0.5), b = ac.createBuffer(1, L, ac.sampleRate), x = b.getChannelData(0); for (let i = 0; i < L; i++) x[i] = Math.random() * 2 - 1; catNz = b; }
+    const s = ac.createBufferSource(), hp = ac.createBiquadFilter(), g2 = ac.createGain(); s.buffer = catNz; hp.type = 'bandpass'; hp.frequency.value = 2600; hp.Q.value = 0.8; g2.gain.setValueAtTime(0.0001, t0); g2.gain.exponentialRampToValueAtTime(o.breath, t0 + d * 0.3); g2.gain.exponentialRampToValueAtTime(0.0001, t0 + d); s.connect(hp); hp.connect(g2); g2.connect(out); s.start(t0, 0, d + 0.02); }
+}
+function purrSynth(d, vol, p) {
+  if (!ac || !save.sound) return; const t0 = ac.currentTime, out = ac.destination;
+  const osc = ac.createOscillator(), am = ac.createOscillator(), amg = ac.createGain(), lp = ac.createBiquadFilter(), env = ac.createGain();
+  osc.type = 'sawtooth'; osc.frequency.value = 62 * p; am.type = 'square'; am.frequency.value = 24; amg.gain.value = 0.5; am.connect(amg);
+  const base = ac.createGain(); base.gain.value = 0.5; osc.connect(base); amg.connect(base.gain); lp.type = 'lowpass'; lp.frequency.value = 520; lp.Q.value = 0.7; base.connect(lp); lp.connect(env);
+  env.gain.setValueAtTime(0.0001, t0); env.gain.exponentialRampToValueAtTime(vol, t0 + d * 0.3); env.gain.exponentialRampToValueAtTime(0.0001, t0 + d); env.connect(out); osc.start(t0); am.start(t0); osc.stop(t0 + d + 0.05); am.stop(t0 + d + 0.05);
+}
+function catVoice(kind, v) {
+  const nw = performance.now(); if (nw - catT < 110 && kind !== 'cheer') return; catT = nw;
+  const vc = VOICE[(v | 0) % VOICE.length], p = vc[0] * (0.97 + Math.random() * 0.06), th = vc[1], F1 = (a, b) => [a * (0.92 + th * 0.2), b * (0.92 + th * 0.2)], F2 = [1700 + th * 500, 2300 + th * 700];
+  switch (kind) {
+    case 'hello': meowSynth({ dur: 0.42, vol: 0.1, f: [[0, 520 * p], [0.28, 780 * p], [1, 540 * p]], f1: F1(650, 1050), f2: F2, breath: 0.02 }); break;
+    case 'go': meowSynth({ dur: 0.2, vol: 0.1, f: [[0, 700 * p], [1, 980 * p]], f1: F1(800, 1200), f2: F2 }); break;
+    case 'wake': meowSynth({ dur: 0.8, vol: 0.1, f: [[0, 380 * p], [0.3, 580 * p], [0.7, 740 * p], [1, 430 * p]], f1: F1(500, 1150), f2: F2, vib: 5, breath: 0.03 }); break;
+    case 'sleepy': purrSynth(0.9, 0.06, p); break;
+    case 'yawn': meowSynth({ dur: 0.9, vol: 0.06, f: [[0, 420 * p], [0.4, 560 * p], [1, 300 * p]], f1: F1(600, 1000), f2: F2, vib: 4, breath: 0.05 }); break;
+    case 'cheer': meowSynth({ dur: 0.15, vol: 0.1, f: [[0, 800 * p], [1, 1150 * p]], f1: F1(900, 1300), f2: F2 }); meowSynth({ at: 0.17, dur: 0.22, vol: 0.1, f: [[0, 900 * p], [1, 1300 * p]], f1: F1(950, 1400), f2: F2 }); break;
+    case 'home': meowSynth({ dur: 0.5, vol: 0.085, f: [[0, 680 * p], [0.35, 640 * p], [1, 380 * p]], f1: F1(950, 600), f2: F2, breath: 0.015 }); break;
+    case 'pet': purrSynth(0.7, 0.055, p); meowSynth({ at: 0.05, dur: 0.3, vol: 0.085, f: [[0, 620 * p], [0.4, 860 * p], [1, 600 * p]], f1: F1(700, 1100), f2: F2 }); break;
+  }
+}
+
 const sfx = {
   click() { tone(420, 0.07, 'sine', 0.12, 620); },
   tap() { tone(520, 0.1, 'triangle', 0.16, 900); },
@@ -560,6 +602,7 @@ const sfx = {
     { const sc = [0, 2, 4, 7, 9, 12, 14, 16], f = 659 * Math.pow(2, sc[biteN++ % 8] / 12), os = ac.createOscillator(), g = ac.createGain(); os.type = 'triangle'; os.frequency.setValueAtTime(f, t + 0.012);
       g.gain.setValueAtTime(0.0001, t + 0.012); g.gain.exponentialRampToValueAtTime(0.07, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.2); os.connect(g); g.connect(o); os.start(t + 0.012); os.stop(t + 0.22); }
   },
+  cat(k, v) { catVoice(k, v); },
   meow(p) { p = p || 1; tone(760 * p, 0.12, 'triangle', 0.1, 980 * p); tone(980 * p, 0.2, 'triangle', 0.09, 520 * p, 0.1); },
   rumble() { tone(90, 0.5, 'sawtooth', 0.05, 55); tone(70, 0.6, 'sawtooth', 0.04, 45, 0.5); },
   done() { [659, 784, 988].forEach((f, i) => tone(f, 0.18, 'triangle', 0.12, null, i * 0.07)); },
@@ -969,7 +1012,7 @@ function layout() {
   else if (mode === 'title') { const a = logoEl.getBoundingClientRect(), b = menuEl.getBoundingClientRect(); if (a.height) top = a.bottom - r0.top; if (b.height) bot = b.top - r0.top; }
   top = Math.max(0, top); bot = Math.max(top + 150, bot);
   const totalW = W + 2 * FR, totalH = H + 2 * FR + HOLE;
-  S = Math.max(5, Math.min((cw - 14) / totalW, (bot - top) / totalH)); S = Math.floor(S * dpr) / dpr;
+  S = Math.max(5, Math.min((cw - 8) / totalW, (bot - top) / totalH)); S = Math.floor(S * dpr) / dpr;
   BX = (cw - W * S) / 2; BY = Math.max(top + FR * S, top + ((bot - top) - totalH * S) / 2 + FR * S);
   HX = BX + HOUSEX * S; HY = BY + (H + FR + 2.3) * S; TOPY = top; BOTY = bot;
   laneY = [Math.max(34, (BY - FR * S) * 0.55), Math.min(ch - 40, (HY + 2.5 * S + bot) / 2 + 4)];
@@ -1063,17 +1106,15 @@ function paintHouse(g) {
 
 function paintTray() {
   trayCv = mk(cw * dpr, ch * dpr); const g = trayCv.getContext('2d'); g.scale(dpr, dpr);
-  const x = BX - FR * S, y = BY - FR * S, w = (W + 2 * FR) * S, h = (H + 2 * FR) * S, rad = FR * S * 0.55;
-  g.save(); g.shadowColor = 'rgba(20,60,90,.45)'; g.shadowBlur = S * 1.5; g.shadowOffsetY = S * 0.6; rr(g, x, y, w, h, rad); g.fillStyle = '#2a8fb0'; g.fill(); g.restore();
-  g.save(); rr(g, x, y, w, h, rad); g.clip(); const wi = IM.wood; if (wi && wi.naturalWidth) { const kk = Math.max(w * dpr / wi.naturalWidth, h * dpr / wi.naturalHeight), ws = scaled(wi, wi.naturalWidth * kk, wi.naturalHeight * kk); g.drawImage(ws, x, y, ws.width / dpr, ws.height / dpr); } else { g.fillStyle = '#3aa0c0'; g.fillRect(x, y, w, h); }
-  const lg = g.createLinearGradient(0, y, 0, y + h); lg.addColorStop(0, 'rgba(220,255,255,.3)'); lg.addColorStop(0.45, 'rgba(200,250,255,0)'); lg.addColorStop(1, 'rgba(0,40,72,.36)'); g.fillStyle = lg; g.fillRect(x, y, w, h); g.restore();
-  rr(g, x, y, w, h, rad); g.lineWidth = 2.5; g.strokeStyle = '#0f4f6e'; g.stroke();
-  g.save(); rr(g, x, y, w, h, rad); g.clip(); g.strokeStyle = 'rgba(235,255,255,.6)'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(x + rad, y + 3); g.lineTo(x + w - rad, y + 3); g.stroke(); g.restore();
-  const fx = BX - 0.25 * S, fy = BY - 0.25 * S, fw = W * S + 0.5 * S, fh = H * S + 0.5 * S;
-  rr(g, fx, fy, fw, fh, S * 0.5); const fg = g.createLinearGradient(0, fy, 0, fy + fh); fg.addColorStop(0, '#f1fbfd'); fg.addColorStop(1, '#d6eff5'); g.fillStyle = fg; g.fill();
-  g.save(); rr(g, fx, fy, fw, fh, S * 0.5); g.clip(); g.lineWidth = S * 0.6; g.strokeStyle = 'rgba(15,80,110,.28)'; g.strokeRect(fx, fy, fw, fh); g.restore();
-  [[x + rad * 0.3, y + rad * 0.3], [x + w - rad * 0.3, y + rad * 0.3], [x + rad * 0.3, y + h - rad * 0.3], [x + w - rad * 0.3, y + h - rad * 0.3]].forEach(p => { const kg = g.createRadialGradient(p[0] - 3, p[1] - 3, 1, p[0], p[1], S * 1.05); kg.addColorStop(0, '#ffffff'); kg.addColorStop(0.6, '#bfe4f2'); kg.addColorStop(1, '#5f9fbd'); g.beginPath(); g.arc(p[0], p[1], S * 0.85, 0, 7); g.fillStyle = kg; g.fill(); g.lineWidth = 1.4; g.strokeStyle = '#2b6b8a'; g.stroke(); });
-  g.fillStyle = 'rgba(8,60,92,.55)'; [[x + w * 0.18, y + FR * S * 0.5], [x + w * 0.82, y + FR * S * 0.5], [x + w * 0.18, y + h - FR * S * 0.5], [x + w * 0.82, y + h - FR * S * 0.5]].forEach(p => { g.beginPath(); g.arc(p[0], p[1], 2.2, 0, 7); g.fill(); });
+  const x = BX - FR * S, y = BY - FR * S, w = (W + 2 * FR) * S, h = (H + 2 * FR) * S, rad = Math.max(8, S * 1.1), thick = Math.max(2.5, S * 0.3), r = frng(777), u = Math.max(0.6, S / 11);
+  g.save(); g.fillStyle = 'rgba(0,36,64,.38)'; g.shadowColor = 'rgba(0,36,64,.35)'; g.shadowBlur = S * 0.9; g.shadowOffsetY = S * 0.3; rr(g, x + 1, y + thick + 2, w - 2, h - thick, rad); g.fill(); g.restore();
+  furEdge(g, r, rrPts(x, y + thick, w, h - thick, rad, 3 * u), 6 * u, 2 * u, ['#e7a070', '#efae80', '#d98f5e']);
+  rr(g, x, y + thick, w, h - thick, rad); g.fillStyle = '#dc925f'; g.fill();
+  furEdge(g, r, rrPts(x, y, w, h - thick, rad, 2.6 * u), 7 * u, 2.2 * u, FUZZ);
+  g.save(); rr(g, x, y, w, h - thick, rad); const bg = g.createLinearGradient(0, y, 0, y + h); bg.addColorStop(0, '#fff3e0'); bg.addColorStop(0.55, '#ffdcb6'); bg.addColorStop(1, '#f6b98a'); g.fillStyle = bg; g.fill(); g.clip();
+  furArea(g, r, x, y, w, h, 0.075 / (u * u), u); g.restore();
+  const fx = BX - 0.12 * S, fy = BY - 0.12 * S, fw = W * S + 0.24 * S, fh = H * S + 0.24 * S;
+  g.save(); g.shadowColor = 'rgba(150,80,40,.55)'; g.shadowBlur = S * 0.35; rr(g, fx, fy, fw, fh, S * 0.35); const fg = g.createLinearGradient(0, fy, 0, fy + fh); fg.addColorStop(0, '#fff1de'); fg.addColorStop(1, '#f4d9bb'); g.fillStyle = fg; g.fill(); g.restore();
   paintHouse(g);
 }
 
@@ -1135,9 +1176,9 @@ function buildQueue() {
 }
 function deckSize() {
   const cols = game.cols.length || 4, aw = Math.min(app.clientWidth || 360, 520), avail = aw - 24 - 2 * 58 - 12;
-  const bw = clamp(Math.floor((avail - (cols - 1) * 8) / cols), 38, 62); app.style.setProperty('--bw', bw + 'px'); app.style.setProperty('--bh', Math.round(bw * 1.16) + 'px'); app.style.setProperty('--cols', cols); requestAnimationFrame(placeAll);
+  const bw = clamp(Math.floor((avail - (cols - 1) * 8) / cols), 38, 54); app.style.setProperty('--bw', bw + 'px'); app.style.setProperty('--bh', Math.round(bw * 1.12) + 'px'); app.style.setProperty('--cols', cols); requestAnimationFrame(placeAll);
 }
-function addSlotEl() { const s = document.createElement('div'); s.className = 'slot'; slotsEl.appendChild(s); slotEls.push(s); slotsEl.style.gridTemplateColumns = 'repeat(' + slotEls.length + ', minmax(0, 68px))'; skinSoon(); }
+function addSlotEl() { const s = document.createElement('div'); s.className = 'slot'; slotsEl.appendChild(s); slotEls.push(s); slotsEl.style.gridTemplateColumns = 'repeat(' + slotEls.length + ', minmax(0, 62px))'; skinSoon(); }
 function buildSlots(n) { slotsEl.innerHTML = '';  slotEls = []; for (let i = 0; i < n; i++) addSlotEl(); game.slots = new Array(n).fill(null); game.slotCount = n; applyBed(); }
 /* ---- 덱: 털이 송글송글한 푹신한 쿠션 고양이 집 (슬롯은 아치형 입구) ---- */
 let skinKey = '', skinQ = 0;
@@ -1178,6 +1219,29 @@ function skinDeck() {
   g.fillStyle = '#ff8fb3'; heartP(g, x + w / 2, y + 10, 5); g.fill();
   el.style.setProperty('--skin', 'url(' + cvs.toDataURL('image/webp', 0.92) + ')');
 }
+let signKey = '', signQ = 0;
+function skinSign() {
+  signQ = 0; const el = document.querySelector('.sign'); if (!el) return; const w = el.clientWidth, h = el.clientHeight; if (!w || !h) return;
+  const key = w + 'x' + h; if (key === signKey) return; signKey = key;
+  const mx = 12, mt = 14, mb = 16, d = Math.min(2, window.devicePixelRatio || 1), cvs = mk((w + 2 * mx) * d, (h + mt + mb) * d), g = cvs.getContext('2d'); g.scale(d, d);
+  const r = frng(4321), x = mx, y = mt, rad = 20, thick = 6;
+  [0.1, 0.9].forEach((fx, i) => { const sd = i ? 1 : -1, ex = x + w * fx, P = [[ex - 15, y + 7], [ex + sd * 2, y - 11], [ex + 15, y + 7]];
+    g.save(); g.lineJoin = 'round'; g.fillStyle = g.strokeStyle = '#f5b88a'; g.lineWidth = 8; g.beginPath(); P.forEach((p, k) => g[k ? 'lineTo' : 'moveTo'](p[0], p[1])); g.closePath(); g.fill(); g.stroke();
+    g.fillStyle = g.strokeStyle = '#ff9fbd'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(ex - 8, y + 6); g.lineTo(ex + sd * 2, y - 4); g.lineTo(ex + 8, y + 6); g.closePath(); g.fill(); g.stroke(); g.restore();
+    const pts = []; for (let k = 0; k < 11; k++) { const t = k / 10; pts.push([P[0][0] + (P[1][0] - P[0][0]) * t, P[0][1] + (P[1][1] - P[0][1]) * t, -0.7, -0.5]); pts.push([P[1][0] + (P[2][0] - P[1][0]) * t, P[1][1] + (P[2][1] - P[1][1]) * t, 0.7, -0.5]); }
+    furEdge(g, r, pts, 6, 2.2, FUZZ); });
+  g.save(); g.fillStyle = 'rgba(0,36,64,.38)'; rr(g, x + 2, y + thick + 4, w - 4, h - thick, rad); g.fill(); g.restore();
+  furEdge(g, r, rrPts(x, y + thick, w, h - thick, rad, 3), 6.5, 2.4, ['#e7a070', '#efae80', '#d98f5e']);
+  rr(g, x, y + thick, w, h - thick, rad); g.fillStyle = '#dc925f'; g.fill();
+  furEdge(g, r, rrPts(x, y, w, h - thick, rad, 2.6), 7.5, 2.6, FUZZ);
+  g.save(); rr(g, x, y, w, h - thick, rad); const bg = g.createLinearGradient(0, y, 0, y + h); bg.addColorStop(0, '#fff3e0'); bg.addColorStop(0.55, '#ffdcb6'); bg.addColorStop(1, '#f6b98a'); g.fillStyle = bg; g.fill(); g.clip();
+  furArea(g, r, x, y, w, h, 0.075, 1);
+  const hl = g.createLinearGradient(0, y, 0, y + h * 0.5); hl.addColorStop(0, 'rgba(255,255,255,.5)'); hl.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = hl; g.fillRect(x, y, w, h * 0.5); g.restore();
+  g.save(); g.setLineDash([6, 5]); g.lineCap = 'round'; g.strokeStyle = 'rgba(176,98,62,.5)'; g.lineWidth = 1.5; rr(g, x + 6, y + 6, w - 12, h - thick - 12, rad - 6); g.stroke(); g.restore();
+  el.style.setProperty('--skin', 'url(' + cvs.toDataURL('image/webp', 0.92) + ')');
+}
+function signSoon() { if (!signQ) signQ = requestAnimationFrame(skinSign); }
+try { const sg = document.querySelector('.sign'); if (sg) { new ResizeObserver(signSoon).observe(sg); signSoon(); } } catch (e) {}
 function skinSoon() { if (!skinQ) skinQ = requestAnimationFrame(skinDeck); }
 try { new ResizeObserver(skinSoon).observe(slotsEl); } catch (e) {}
 function clearSlot(si) { slotEls[si].innerHTML = ''; slotEls[si].className = 'slot'; }
@@ -1211,7 +1275,7 @@ function pick(b) {
 function activate(si, slot) {
   const b = slot.block, el = slotEls[si]; ensureBubCss(); el.dataset.cat = b.cat; el.dataset.kind = 'peek'; el.innerHTML = '<span class="bub bc' + b.color + '">' + b.remaining.length + '</span><img class="face" alt="" src="' + faceSrc(b.cat, 'peek') + '">'; placeBub(el);
   slot.bub = el.querySelector('.bub'); slot.img = el.querySelector('.face');
-  const cat = newCat(b.cat, PAL[b.color]); Object.assign(cat, { block: b, slot: si }); slot.cat = cat; game.cats.push(cat); sfx.meow();
+  const cat = newCat(b.cat, PAL[b.color]); Object.assign(cat, { block: b, slot: si }); slot.cat = cat; game.cats.push(cat); sfx.cat('hello', b.cat);
   for (let k = 0; k < 6; k++) P({ type: 'bub', x: X(HOLEX) + (Math.random() - 0.5) * S * 2, y: Y(HOLEY), vx: (Math.random() - 0.5) * 20, vy: -40 - Math.random() * 40, size: 2 + Math.random() * 3, life: 0.9 + Math.random() * 0.5 });
 }
 
@@ -1230,8 +1294,8 @@ function updateCat(c, dt) {
     const taken = new Set(); game.cats.forEach(o => { if (o !== c && (o.state === 'walk' || o.state === 'chomp') && o.target >= 0) taken.add(o.target); });
     for (let n = 0; n < b.remaining.length; n++) { const i = b.remaining[n]; if (removed[i] || taken.has(i) || !isExp(removed, i)) continue; const d = (px(i) - c.x) ** 2 + (py(i) - c.y) ** 2; if (d < bd) { bd = d; best = i; } }
     if (best < 0 && b.remaining.length) for (let i = 0; i < N; i++) { if (removed[i] || art[i] !== b.color || taken.has(i) || !isExp(removed, i)) continue; const d = (px(i) - c.x) ** 2 + (py(i) - c.y) ** 2; if (d < bd) { bd = d; best = i; } }
-    if (best >= 0) { if (c.state === 'wait') { P({ type: 'star', x: X(c.x), y: Y(c.y + FEET) - CATU * S * 1.2, vy: -50, vx: 0, size: 5, color: '#ffe066', life: 0.5, vr: 6 }); } c.target = best; c.state = 'walk'; c.t = 0; c.blocked = false; c.run = Math.sqrt(bd) > 9; }
-    else { if (c.state !== 'wait') { game.waits++; c.t = 0; } c.state = 'wait'; c.blocked = true; turnTo(c, 0, 1, dt); }
+    if (best >= 0) { if (c.state === 'wait') { P({ type: 'star', x: X(c.x), y: Y(c.y + FEET) - CATU * S * 1.2, vy: -50, vx: 0, size: 5, color: '#ffe066', life: 0.5, vr: 6 }); } if (c.state === 'wait') sfx.cat('wake', c.v); else if (!c.went) { c.went = 1; sfx.cat('go', c.v); } c.target = best; c.state = 'walk'; c.t = 0; c.blocked = false; c.run = Math.sqrt(bd) > 9; }
+    else { if (c.state !== 'wait') { game.waits++; c.t = 0; sfx.cat('sleepy', c.v); } c.state = 'wait'; c.blocked = true; turnTo(c, 0, 1, dt); }
   } else if (c.state === 'walk') {
     const dx = px(c.target) - c.x, dy = py(c.target) - c.y, dist = Math.hypot(dx, dy);
     if (dist > REACH) { moving = true; c.run = dist > 8 || (c.run && dist > 5); const sp = (c.run ? 24 : 13) * spdMul(c.v) * (game.churuT > 0 ? 1.6 : 1); if (game.churuT > 0 && Math.random() < dt * 9) P({ type: 'star', x: X(c.x) + (Math.random() - 0.5) * S, y: Y(c.y + FEET) - CATU * S * 0.3, vx: -c.lookX * 30, vy: -20, size: 4, color: '#ffb27a', life: 0.45, vr: 5 }); const step = stepMove(c, px(c.target), py(c.target), sp, dt); if (step > 0 && dist - step <= REACH + 0.001) { c.state = 'chomp'; c.t = 0; c.ate = false; } }
@@ -1248,12 +1312,12 @@ function updateCat(c, dt) {
     if (c.t >= 1.35) { c.state = 'leave'; c.t = 0; }
   } else if (c.state === 'leave') {
     moving = true; c.run = true; const step = stepMove(c, HOLEX, HOLEY - FEET + 1.2, 22, dt); mouth = 0.25; eye = 'happy';
-    if (Math.hypot(HOLEX - c.x, HOLEY - FEET + 1.2 - c.y) < 0.6) { c.state = 'sink'; c.t = 0; }
+    if (Math.hypot(HOLEX - c.x, HOLEY - FEET + 1.2 - c.y) < 0.6) { c.state = 'sink'; c.t = 0; sfx.cat('home', c.v); }
   } else if (c.state === 'sink') {
     const k = Math.min(1, c.t / 0.45), ek = k * k * (3 - 2 * k); c.sc = Math.max(0.01, 1 - ek); c.y = HOLEY - FEET + 1.2 - ek * 1.5; eye = 'happy'; jump = 0;
     if (k >= 1) { c.state = 'gone'; for (let i = 0; i < 6; i++) P({ type: 'bub', x: X(HOLEX), y: Y(HOLEY), vx: (Math.random() - 0.5) * 30, vy: -40 - Math.random() * 40, size: 2 + Math.random() * 3, life: 1 }); }
   }
-  if (c.state === 'wait') { wantSit = 1; if (c.t > 0.5) eye = 'sleep'; if (c.nextYawn -= dt, c.nextYawn < 0 && c.yawn <= 0) { c.yawn = 1.1; c.nextYawn = 5 + Math.random() * 5; }
+  if (c.state === 'wait') { wantSit = 1; if (c.t > 0.5) eye = 'sleep'; if (c.nextYawn -= dt, c.nextYawn < 0 && c.yawn <= 0) { c.yawn = 1.1; c.nextYawn = 5 + Math.random() * 5; sfx.cat('yawn', c.v); }
     c.zT -= dt; if (c.zT <= 0 && c.t > 0.6) { c.zT = 0.9; P({ type: 'z', x: X(c.x) + CATU * S * 0.3, y: Y(c.y + FEET) - CATU * S * 0.72, vx: 5, vy: -18, size: 13 + Math.random() * 3, life: 1.8, sway: 10, rot: Math.random() * 6 }); } }
   if (c.yawn > 0) { c.yawn -= dt; const k = Math.sin((1.1 - c.yawn) / 1.1 * Math.PI); if (c.state === 'wait') { mouth = Math.max(mouth, k); eye = 'happy'; headDy = -0.03 * k; } }
   if (c.state === 'gone') return;
@@ -1278,7 +1342,7 @@ function eat(c) {
   if (Math.random() < 0.3) P({ type: 'bub', x: X(px(i)), y: Y(py(i)), vx: (Math.random() - 0.5) * 12, vy: -34, size: 2 + Math.random() * 2, life: 0.9 });
 }
 function finishCat(c) {
-  game.slots[c.slot] = null; clearSlot(c.slot); layoutQueue(); c.state = 'cheer'; c.t = 0; c.alt = Math.random() < 0.4; sfx.done(); buzz(25);
+  game.slots[c.slot] = null; clearSlot(c.slot); layoutQueue(); c.state = 'cheer'; c.t = 0; c.alt = Math.random() < 0.4; sfx.done(); sfx.cat('cheer', c.v); buzz(25);
   for (let k = 0; k < 12; k++) P({ type: 'star', x: X(c.x), y: Y(c.y + FEET) - CATU * S * 0.8, vx: (Math.random() - 0.5) * 140, vy: -70 - Math.random() * 80, g: 180, size: 5 + Math.random() * 4, color: ['#ffd84a', '#ff7ab8', '#7fd3f7', '#fff'][k % 4], rot: Math.random() * 6, vr: 6, life: 0.8 });
 }
 const BLI = [];
@@ -1664,7 +1728,7 @@ cv.addEventListener('pointerdown', e => {
   const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; audioOn();
   const all = [].concat(demo, game.cats); let best = null, bd = 1e9;
   all.forEach(c => { const fx = X(c.x), fy = Y(c.y + FEET) - CATU * S * 0.5 * (c.sc || 1), d = Math.hypot(x - fx, y - fy); if (d < CATU * S * 0.7 && d < bd) { bd = d; best = c; } });
-  if (best) { if (best.state === 'idle' || best.state === 'sleep') { best.state = 'hop'; best.t = 0; } else if (best.state === 'wait' || best.state === 'seek') { best.yawn = 0.9; } if (best.state !== 'walk' && best.state !== 'go' && best.state !== 'chomp') { best.react = Math.random() < 0.5 ? 'wave' : 'roll'; best.rt = 1.3; } sfx.meow(); buzz(15); for (let k = 0; k < 3; k++) P({ type: 'heart', x: x + (Math.random() - 0.5) * 20, y: y - 20, vx: (Math.random() - 0.5) * 30, vy: -50, g: 20, size: 8, color: '#ff7ab8', life: 0.9 }); }
+  if (best) { if (best.state === 'idle' || best.state === 'sleep') { best.state = 'hop'; best.t = 0; } else if (best.state === 'wait' || best.state === 'seek') { best.yawn = 0.9; } if (best.state !== 'walk' && best.state !== 'go' && best.state !== 'chomp') { best.react = Math.random() < 0.5 ? 'wave' : 'roll'; best.rt = 1.3; } sfx.cat(best.state === 'wait' || best.state === 'seek' || best.state === 'sleep' ? 'pet' : 'hello', best.v || 0); buzz(15); for (let k = 0; k < 3; k++) P({ type: 'heart', x: x + (Math.random() - 0.5) * 20, y: y - 20, vx: (Math.random() - 0.5) * 30, vy: -50, g: 20, size: 8, color: '#ff7ab8', life: 0.9 }); }
 });
 
 /* ================= main loop ================= */
