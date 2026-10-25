@@ -1,0 +1,25 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>발라냥 공유하기</title>
+<meta property="og:title" content="발라냥 - 고양이가 생선을 발라먹는 퍼즐"><meta property="og:description" content="설치 없이 바로 플레이!"><meta property="og:image" content="https://l28641751-hue.github.io/balranyang/og.jpg">
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;font-family:system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;background:linear-gradient(#7fd3f7,#2f86d8);color:#3b2412}
+.card{width:min(380px,100%);background:#fff3e0;border-radius:28px;padding:26px 22px;text-align:center;box-shadow:0 10px 0 #e9a874,0 20px 30px rgba(0,30,60,.35);border:4px solid #ffd7ae}
+h1{margin:0 0 4px;font-size:30px}p{margin:6px 0 14px;font-size:15px;line-height:1.5}
+img.qr{width:210px;height:210px;border-radius:16px;background:#fff;padding:8px;box-shadow:0 3px 8px rgba(0,0,0,.18)}
+.b{display:block;width:100%;margin:10px 0 0;padding:14px;border:0;border-radius:18px;font:700 17px inherit;font-family:inherit;cursor:pointer;text-decoration:none;color:#fff;background:linear-gradient(#ffb347,#ff7a2f);box-shadow:0 4px 0 #c24e12}
+.b.s{background:linear-gradient(#6fcf7a,#38a85a);box-shadow:0 4px 0 #1f7a3c}.b.c{background:linear-gradient(#7fb8ff,#4a86e8);box-shadow:0 4px 0 #2a56a8}
+.url{margin-top:12px;font-size:13px;word-break:break-all;color:#7a4a2a}
+</style></head><body><main class="card">
+<h1>🐱 발라냥</h1><p>고양이가 모자이크 생선을 발라먹는 퍼즐 게임<br>설치 없이 누구나 바로 플레이!</p>
+<img class="qr" src="qr.png" alt="발라냥 QR 코드">
+<a class="b" href="./">▶ 바로 플레이</a>
+<button class="b s" id="sh">📤 친구에게 공유하기</button>
+<button class="b c" id="cp">🔗 링크 복사</button>
+<div class="url" id="u"></div></main>
+<script>
+const U='https://l28641751-hue.github.io/balranyang/',T='발라냥 - 고양이가 생선을 발라먹는 퍼즐',X='같은 색 고양이를 눌러 생선을 발라먹어요! 설치 없이 바로 플레이';
+document.getElementById('u').textContent=U;
+document.getElementById('sh').onclick=async()=>{if(navigator.share){try{await navigator.share({title:T,text:X,url:U});}catch(e){}}else cp();};
+async function cp(){const b=document.getElementById('cp');try{await navigator.clipboard.writeText(U);b.textContent='✅ 복사했어요!';}catch(e){prompt('링크를 복사하세요',U);}setTimeout(()=>b.textContent='🔗 링크 복사',2000);}
+document.getElementById('cp').onclick=cp;
+</script></body></html>
