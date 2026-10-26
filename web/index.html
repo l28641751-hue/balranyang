@@ -610,8 +610,12 @@ const sfx = {
   cat(k, v) { catVoice(k, v); },
   tok(k) { tone(k ? 170 : 215, 0.09, 'sine', 0.22, k ? 95 : 120); tone(1500, 0.02, 'square', 0.03); },
   coin() { tone(1318, 0.07, 'triangle', 0.1); tone(1760, 0.14, 'triangle', 0.1, null, 0.07); },
-  sharkWarn() { [0, 0.3].forEach(d => { tone(520, 0.14, 'sine', 0.15, null, d); tone(390, 0.16, 'sine', 0.15, null, d + 0.14); }); tone(70, 0.9, 'sawtooth', 0.05, 52, 0.1); },
-  sharkSwim() { tone(120, 1.5, 'sawtooth', 0.045, 70); tone(240, 1.2, 'triangle', 0.03, 140, 0.2); },
+  sharkWarn() {}, sharkSwim() {},
+  jaws(gap, v) { if (!ac || !save.sound) return; v = v || 1; const t0 = ac.currentTime;
+    [[82.41, 0, 0.34], [87.31, gap, 0.5]].forEach(a => { const t = t0 + a[1], d = a[2], f = a[0];
+      const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(900, t); lp.frequency.exponentialRampToValueAtTime(260, t + d); lp.Q.value = 2.5;
+      const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.3 * v, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + d); lp.connect(g); g.connect(ac.destination);
+      [['sawtooth', f, 1], ['triangle', f * 2, 0.7], ['sine', f * 3, 0.3]].forEach(o => { const os = ac.createOscillator(), og = ac.createGain(); os.type = o[0]; os.frequency.value = o[1]; og.gain.value = o[2]; os.connect(og); og.connect(lp); os.start(t); os.stop(t + d + 0.05); }); }); },
   sharkScare() { tone(320, 0.22, 'sine', 0.15, 980); tone(980, 0.2, 'triangle', 0.1, 1500, 0.12); tone(1568, 0.22, 'triangle', 0.08, null, 0.24); },
   meow(p) { p = p || 1; tone(760 * p, 0.12, 'triangle', 0.1, 980 * p); tone(980 * p, 0.2, 'triangle', 0.09, 520 * p, 0.1); },
   rumble() { tone(90, 0.5, 'sawtooth', 0.05, 55); tone(70, 0.6, 'sawtooth', 0.04, 45, 0.5); },
@@ -1135,7 +1139,8 @@ function updateParts(dt) { for (let i = parts.length - 1; i >= 0; i--) { const p
 function drawParts(g) {
   parts.forEach(p => {
     const k = p.life / p.max; g.save(); g.translate(p.x, p.y); g.globalAlpha = Math.min(1, k * 2.2);
-    if (p.type === 'dust') { g.fillStyle = 'rgba(255,248,225,.75)'; g.beginPath(); g.arc(0, 0, p.size * (1.6 - k), 0, 7); g.fill(); }
+    if (p.type === 'streak') { g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 2.4; g.lineCap = 'round'; g.beginPath(); g.moveTo(0, 0); g.lineTo(-p.dr * p.size * (0.45 + k * 0.55), 0); g.stroke(); }
+    else if (p.type === 'dust') { g.fillStyle = 'rgba(255,248,225,.75)'; g.beginPath(); g.arc(0, 0, p.size * (1.6 - k), 0, 7); g.fill(); }
     else if (p.type === 'crumb') { g.rotate(p.rot); g.fillStyle = p.color; g.fillRect(-p.size / 2, -p.size / 2, p.size, p.size); }
     else if (p.type === 'star') { g.rotate(p.rot); g.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, rad = i % 2 ? p.size * 0.35 : p.size; g[i ? 'lineTo' : 'moveTo'](Math.cos(a) * rad, Math.sin(a) * rad); } g.closePath(); g.fillStyle = p.color; g.fill(); g.lineWidth = 1; g.strokeStyle = 'rgba(255,255,255,.9)'; g.stroke(); }
     else if (p.type === 'heart') { const s = p.size; g.scale(s / 10, s / 10); g.beginPath(); g.moveTo(0, 4); g.bezierCurveTo(-12, -4, -5, -12, 0, -5); g.bezierCurveTo(5, -12, 12, -4, 0, 4); g.fillStyle = p.color; g.fill(); g.lineWidth = 1.2; g.strokeStyle = '#fff'; g.stroke(); }
@@ -1312,7 +1317,7 @@ function updateCat(c, dt) {
     else { if (c.state !== 'wait') { game.waits++; c.t = 0; sfx.cat('sleepy', c.v); } c.state = 'wait'; c.blocked = true; turnTo(c, 0, 1, dt); }
   } else if (c.state === 'walk') {
     const dx = px(c.target) - c.x, dy = py(c.target) - c.y, dist = Math.hypot(dx, dy);
-    if (dist > REACH) { moving = true; c.run = dist > 8 || (c.run && dist > 5); const sp = (c.run ? 24 : 13) * spdMul(c.v) * (game.churuT > 0 ? 1.6 : 1); if (game.churuT > 0 && Math.random() < dt * 9) P({ type: 'star', x: X(c.x) + (Math.random() - 0.5) * S, y: Y(c.y + FEET) - CATU * S * 0.3, vx: -c.lookX * 30, vy: -20, size: 4, color: '#ffb27a', life: 0.45, vr: 5 }); const step = stepMove(c, px(c.target), py(c.target), sp, dt); if (step > 0 && dist - step <= REACH + 0.001) { c.state = 'chomp'; c.t = 0; c.ate = false; } }
+    if (dist > REACH) { moving = true; c.run = dist > 3.6 || (c.run && dist > 2.6); const sp = (c.run ? 24 : 13) * spdMul(c.v) * (game.churuT > 0 ? 1.6 : 1); if (game.churuT > 0 && Math.random() < dt * 9) P({ type: 'star', x: X(c.x) + (Math.random() - 0.5) * S, y: Y(c.y + FEET) - CATU * S * 0.3, vx: -c.lookX * 30, vy: -20, size: 4, color: '#ffb27a', life: 0.45, vr: 5 }); const step = stepMove(c, px(c.target), py(c.target), sp, dt); if (step > 0 && dist - step <= REACH + 0.001) { c.state = 'chomp'; c.t = 0; c.ate = false; } }
     else { c.state = 'chomp'; c.t = 0; c.ate = false; }
   } else if (c.state === 'chomp') {
     mouth = 0.5 + 0.5 * Math.sin(c.t * 50); eye = 'chew'; headDy = Math.sin(Math.min(1, c.t / 0.17) * Math.PI) * 0.05; turnTo(c, px(c.target) - c.x, 0, dt);
@@ -1345,8 +1350,8 @@ function updateCat(c, dt) {
   if (c.state === 'gone') return;
   c.sit += (wantSit - c.sit) * Math.min(1, dt * 7); c.fs += (c.face - c.fs) * Math.min(1, dt * 16);
   c.mv += ((moving ? 1 : 0) - c.mv) * Math.min(1, dt * 14);
-  const spd = c.run ? 20 : 14; c.wph += dt * spd * c.mv;
-  const hopRun = c.run ? Math.abs(Math.sin(c.wph * 0.5)) * 0.13 * c.mv : 0;
+  const spd = c.run ? 27 : 14; c.wph += dt * spd * c.mv;
+  const hopRun = 0;
   c.bob = (c.run ? 0 : Math.abs(Math.sin(c.wph)) * 0.04 * c.mv);
   c.jump = jump + hopRun; c.sq = 1 + (c.run ? Math.sin(c.wph) * 0.05 : Math.sin(c.wph * 2) * 0.025) * c.mv + (c.state === 'wait' ? Math.sin(c.time * 2.4) * 0.01 : 0);
   c.tilt = (c.fx * 0.14) * c.mv + (c.sit > 0.5 ? Math.sin(c.time * 1.5) * 0.04 + 0.1 * c.sit : 0);
@@ -1354,7 +1359,8 @@ function updateCat(c, dt) {
   c.nextBlink -= dt; if (c.nextBlink < 0) { c.blink = 0.13; c.nextBlink = 1.6 + Math.random() * 2.6; } if (c.blink > 0) c.blink -= dt;
   c.earT -= dt; if (c.earT < 0) { c.ear = 0.35; c.earT = 2 + Math.random() * 4; } c.ear *= Math.pow(0.04, dt);
   c.eye = eye; c.mouth = c.run && c.mv > 0.5 ? Math.max(mouth, 0.3) : mouth; c.eo = c.blink > 0 ? 0.05 : 1;
-  if (c.mv > 0.5 && c.run) { c.dust -= dt; if (c.dust < 0) { c.dust = 0.07; P({ type: 'dust', x: X(c.x) + (Math.random() - 0.5) * 8, y: Y(c.y + FEET) - 2, vx: -c.lookX * 20, vy: -8, size: 3 + Math.random() * 3, life: 0.45 }); } }
+  if (c.mv > 0.5 && c.run) { const dr = Math.abs(c.lookX) > 0.2 ? Math.sign(c.lookX) : c.face; c.sk = (c.sk || 0) - dt; if (c.sk <= 0) { c.sk = 0.05; P({ type: 'streak', x: X(c.x) - dr * S * 1.1, y: Y(c.y + FEET) - CATU * S * (0.12 + Math.random() * 0.5), vx: -dr * 60, dr: dr, size: S * (1.1 + Math.random() * 1.1), life: 0.26 }); } }
+  if (c.mv > 0.5 && c.run) { c.dust -= dt; if (c.dust < 0) { c.dust = 0.055; P({ type: 'dust', x: X(c.x) + (Math.random() - 0.5) * 8, y: Y(c.y + FEET) - 2, vx: -c.lookX * 20, vy: -8, size: 3 + Math.random() * 3, life: 0.45 }); } }
 }
 function eat(c) {
   const i = c.target, rem = c.block.remaining; let k = rem.indexOf(i); if (k < 0) { k = rem.findIndex(t => removed[t]); if (k < 0) k = rem.findIndex(t => !isExp(removed, t)); if (k < 0) k = 0; } if (k >= 0 && rem.length) rem.splice(k, 1);
@@ -1426,44 +1432,69 @@ function sharkSize() { const w = S * 9; return [w, w * (SHK && SHK.naturalWidth 
 function sharkHit(x, y) { const sh = game.shark; if (!sh) return false; const [w, h] = sharkSize(); return Math.abs(x - X(sh.x)) < w * 0.58 && Math.abs(y - Y(sh.y)) < h * 0.85; }
 function scareShark() {
   const sh = game.shark; if (!sh || sh.phase === 'scared') return;
-  sh.phase = 'scared'; sh.t = 0; game.scares++; game.bonus += 3; sfx.sharkScare(); sfx.coin(); buzz([20, 30, 20]);
+  sh.phase = 'scared'; sh.t = 0; duckMusic(false); game.scares++; game.bonus += 3; sfx.sharkScare(); sfx.coin(); buzz([20, 30, 20]);
   for (let k = 0; k < 12; k++) P({ type: 'star', x: X(sh.x) + (Math.random() - 0.5) * S * 4, y: Y(sh.y) + (Math.random() - 0.5) * S * 2, vx: (Math.random() - 0.5) * 160, vy: -60 - Math.random() * 80, g: 120, size: 5 + Math.random() * 4, color: ['#ffd84a', '#fff', '#7fd3f7'][k % 3], rot: Math.random() * 6, vr: 6, life: 0.8 });
   txtPop(X(sh.x), Y(sh.y) - S * 3, '쫓아냈다! +3', '#ffe066', 24);
   game.cats.forEach(c => { if (c.state !== 'gone' && c.state !== 'leave') { c.react = 'happy'; c.rt = 0.8; } });
 }
+function sharkPath() {
+  const cw = Math.random() < 0.5 ? 1 : -1, th0 = (Math.random() < 0.5 ? 0 : Math.PI) + (Math.random() - 0.5) * 0.9, cx = W / 2 + (Math.random() - 0.5) * 3, cy = H / 2 + (Math.random() - 0.5) * 2, rx = W * 0.4, ry = H * 0.36, ph = Math.random() * 6.28, sweep = Math.PI * 2 * 1.08, n = 110, pts = [];
+  for (let i = 0; i <= n; i++) {
+    const u = i / n, th = th0 + cw * sweep * u, ed = Math.min(1, u / 0.14, (1 - u) / 0.14), e = ed * ed * (3 - 2 * ed), wob = 0.8 + 0.27 * Math.sin(u * Math.PI * 2 * 1.5 + ph), r = wob * e + 2.7 * (1 - e);
+    pts.push([cx + Math.cos(th) * rx * r, cy + Math.sin(th) * ry * r]);
+  }
+  const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  let s0 = 0; for (let i = 0; i < pts.length; i++) { if (pts[i][0] > -1.5 && pts[i][0] < W + 1.5 && pts[i][1] > -1 && pts[i][1] < H + 1) { s0 = cum[i]; break; } }
+  return { pts, cum, len: cum[cum.length - 1], s0 };
+}
+function sharkAt(sh, s) {
+  const c = sh.cum, p = sh.pts; s = clamp(s, 0, sh.len); let lo = 0, hi = c.length - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (c[m] <= s) lo = m; else hi = m; }
+  const k = (s - c[lo]) / Math.max(1e-6, c[hi] - c[lo]); return [p[lo][0] + (p[hi][0] - p[lo][0]) * k, p[lo][1] + (p[hi][1] - p[lo][1]) * k, p[hi][0] - p[lo][0], p[hi][1] - p[lo][1]];
+}
+function jawsBeat(sh, dt) {
+  sh.mt -= dt; if (sh.mt > 0) return;
+  const k = sh.phase === 'warn' ? 1.5 - sh.t * 0.18 : Math.max(0.42, 1.05 - (sh.s - sh.s0) / Math.max(1, sh.len - sh.s0) * 0.7);
+  sfx.jaws(Math.max(0.2, k * 0.3), 1 + (sh.phase === 'swim' ? 0.15 : 0)); sh.mt = k;
+}
+function duckMusic(on) { if (on) { if (!game.duck) { game.duck = bgm.lvl || 0.5; setMusicLevel(Math.min(0.14, game.duck)); } } else if (game.duck) { setMusicLevel(game.duck); game.duck = 0; } }
 function updateShark(dt) {
   const g = game; if (g.state !== 'play') return;
   if (g.comboT > 0) g.comboT -= dt;
   let sh = g.shark;
   if (!sh) {
+    duckMusic(false);
     if (!g.started) return; g.sharkT -= dt; if (g.sharkT > 0) return;
     const act = g.cats.filter(c => ['seek', 'walk', 'chomp', 'wait', 'full'].includes(c.state)); if (!act.length) { g.sharkT = 3; return; }
-    const tgt = act[(Math.random() * act.length) | 0], dir = Math.random() < 0.5 ? 1 : -1;
-    g.shark = { phase: 'warn', t: 0, dir, y: clamp(tgt.y, 3.5, H - 3.5), x: dir > 0 ? -1.5 : W + 1.5, hit: new Set(), bt: 0 };
-    sfx.sharkWarn(); if (!save.tipShark) { save.tipShark = 1; persist(); toast('상어다! 상어를 톡 눌러서 쫓아내요. 안 쫓으면 가까운 고양이가 울며 도망가요!', 4600); }
+    const pa = sharkPath(), st = sharkAt(pa, pa.s0);
+    g.shark = { phase: 'warn', t: 0, ...pa, s: pa.s0, x: st[0], y: st[1], vx: st[2], vy: st[3], face: st[2] >= 0 ? 1 : -1, dir: st[2] >= 0 ? 1 : -1, hit: new Set(), bt: 0, mt: 0 };
+    duckMusic(true); if (!save.tipShark) { save.tipShark = 1; persist(); toast('상어다! 상어를 톡 눌러서 쫓아내요. 안 쫓으면 가까운 고양이가 울며 도망가요!', 4600); }
     return;
   }
   sh.t += dt;
-  if (sh.phase === 'warn') { sh.x += Math.sin(sh.t * 7) * 0.02; if (sh.t >= 2.1) { sh.phase = 'swim'; sh.t = 0; sfx.sharkSwim(); } }
+  if (sh.phase === 'warn') { jawsBeat(sh, dt); if (sh.t >= 2.6) { sh.phase = 'swim'; sh.t = 0; } }
   else if (sh.phase === 'swim') {
-    sh.x += sh.dir * ((W + 9) / 3.4) * dt; sh.bt -= dt; if (sh.bt <= 0) { sh.bt = 0.07; P({ type: 'bub', x: X(sh.x) - sh.dir * S * 3.5, y: Y(sh.y) + (Math.random() - 0.5) * S * 2, vx: -sh.dir * 10, vy: -25, size: 2 + Math.random() * 3, life: 0.8 }); }
+    jawsBeat(sh, dt);
+    sh.s += 6.6 * dt; const st = sharkAt(sh, sh.s); sh.x = st[0]; sh.y = st[1]; sh.vx = st[2]; sh.vy = st[3]; sh.dir = st[2] >= 0 ? 1 : -1;
+    sh.bt -= dt; if (sh.bt <= 0) { sh.bt = 0.09; P({ type: 'bub', x: X(sh.x) - sh.dir * S * 3.5, y: Y(sh.y) + (Math.random() - 0.5) * S * 2, vx: -sh.dir * 10, vy: -25, size: 2 + Math.random() * 3, life: 0.8 }); }
     g.cats.forEach(c => { if (sh.hit.has(c) || !['seek', 'walk', 'chomp', 'wait', 'full', 'spawn'].includes(c.state)) return; if (Math.abs(c.x - sh.x) < 3.4 && Math.abs(c.y - sh.y) < 3.9) { sh.hit.add(c); fleeCat(c); } });
-    if (sh.dir > 0 ? sh.x > W + 7 : sh.x < -7) { g.shark = null; g.sharkT = sharkGap(); }
+    if (sh.s >= sh.len) { g.shark = null; g.sharkT = sharkGap(); }
   } else if (sh.phase === 'scared') { sh.y -= 9 * dt; sh.x += sh.dir * 6 * dt; if (sh.t > 0.9) { g.shark = null; g.sharkT = sharkGap(); } }
 }
 function drawShark(g, t) {
   const sh = game.shark; if (!sh) return;
   if (!SHK) { SHK = new Image(); SHK.src = ASSETS.shark; } if (!SHK.complete || !SHK.naturalWidth) return;
   const [w, h] = sharkSize(), x = X(sh.x), y = Y(sh.y);
+  sh.face += ((sh.dir) - sh.face) * Math.min(1, 0.05 + 0.1 * 6 / 60);
   if (sh.phase === 'warn') {
     const a = 0.16 + 0.1 * Math.sin(sh.t * 10); g.save(); g.fillStyle = 'rgba(0,30,70,' + a + ')'; g.fillRect(BX, y - h * 0.5, W * S, h); g.restore();
-    const ex = X(sh.dir > 0 ? 2.6 : W - 2.6), ey = y - h * 0.62, bounce = Math.abs(Math.sin(sh.t * 9)) * 6;
+    const left = sh.x < W / 2, ex = X(left ? 2.6 : W - 2.6), ey = clamp(y - h * 0.62, S * 2, 1e9), bounce = Math.abs(Math.sin(sh.t * 9)) * 6;
     g.save(); g.translate(ex, ey - bounce); g.fillStyle = '#ff4d5e'; g.strokeStyle = '#fff'; g.lineWidth = 3; rr(g, -15, -17, 30, 34, 10); g.fill(); g.stroke(); g.fillStyle = '#fff'; g.font = '400 24px Jua, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('!', 0, 1); g.restore();
   }
-  g.save(); g.translate(x, y); if (sh.dir < 0) g.scale(-1, 1);
+  g.save(); g.translate(x, y);
   g.globalAlpha = 0.25; g.fillStyle = '#04223a'; E(g, 0, h * 0.52, w * 0.42, h * 0.1); g.fill(); g.globalAlpha = sh.phase === 'scared' ? Math.max(0, 1 - sh.t / 0.9) : 1;
-  const sw = sh.phase === 'scared' ? sh.t * 14 : Math.sin(t * 9) * 0.05;
-  g.rotate(sw + (sh.phase === 'warn' ? Math.sin(sh.t * 7) * 0.04 : 0)); const sq = sh.phase === 'scared' ? 1 - sh.t * 0.4 : 1 + Math.sin(t * 9) * 0.02; g.scale(sq, 1 / sq);
+  const pitch = clamp(Math.atan2(sh.vy, Math.abs(sh.vx) + 1e-6), -0.55, 0.55) * clamp(sh.face, -1, 1);
+  const sw = sh.phase === 'scared' ? sh.t * 14 : Math.sin(t * 7) * 0.05 + (sh.phase === 'warn' ? Math.sin(sh.t * 7) * 0.04 : 0);
+  g.rotate(pitch + sw); const sq = sh.phase === 'scared' ? 1 - sh.t * 0.4 : 1 + Math.sin(t * 7) * 0.02; g.scale(sq * (Math.abs(sh.face) < 0.12 ? 0.12 * Math.sign(sh.face || 1) : sh.face), 1 / sq);
   g.drawImage(SHK, -w / 2, -h / 2, w, h); g.restore();
 }
 
@@ -1474,13 +1505,13 @@ function drawCatActor(g, c, withTag) {
   const name = 'c' + c.v + '_' + (pose === 'walk' ? ((Math.floor(c.wph / Math.PI) & 1) ? 'wb' : 'wa') : pose), s = getSp(name, k); if (!s) return;
   const w = s.width / dpr, h = s.height / dpr, jp = c.jump * u;
   let sx = 1 + 0.1 * c.pulse, sy = 1 - 0.1 * c.pulse, rot = 0, dx = 0, lift = 0;
-  if (pose === 'walk') { lift = Math.abs(Math.sin(c.wph)) * (c.run ? 0.11 : 0.06) * u * c.mv; sy *= 1 + Math.sin(c.wph * 2) * 0.03 * c.mv; rot = c.run ? c.fs * 0.07 * c.mv : 0; sx *= c.fs; }
+  if (pose === 'walk') { if (c.run) { const st = Math.abs(Math.sin(c.wph)), m = c.mv; lift = st * 0.15 * u * m; sx *= 1 + (0.1 + 0.07 * st) * m; sy *= 1 - (0.05 + 0.06 * st) * m; rot = c.fs * (0.27 + 0.035 * Math.sin(c.wph * 2)) * m + Math.cos(c.wph) * 0.045 * c.fs * m; dx = c.fs * u * 0.07 * m; } else { lift = Math.abs(Math.sin(c.wph)) * 0.06 * u * c.mv; sy *= 1 + Math.sin(c.wph * 2) * 0.03 * c.mv; } sx *= c.fs; }
   else if (pose === 'sleep') { const b = Math.sin(c.time * 1.9) * 0.025; sy *= 1 + b; sx *= 1 - b * 0.6; rot = Math.sin(c.time * 0.7) * 0.015; }
   else if (c.state === 'chomp') { const b = Math.sin(c.time * 36); sy *= 1 - 0.035 * (b * 0.5 + 0.5); rot = clamp(c.lookX, -1, 1) * 0.09; dx = clamp(c.lookX, -1, 1) * S * 0.18; }
   else if (pose === 'sit') { sy *= 1 + Math.sin(c.time * 2.4) * 0.012; }
   else if (pose === 'roll') { rot = Math.sin(c.time * 9) * 0.07; }
   else if (pose === 'wave') { sy *= 1 + Math.sin(c.time * 7) * 0.012; }
-  g.save(); g.globalAlpha = 0.28 * c.sc * (1 - Math.min(0.7, c.jump * 2)); g.fillStyle = '#0a2b44'; E(g, fxp, fyp + 1, 0.4 * u * (pose === 'sleep' ? 1.05 : 1), 0.085 * u); g.fill(); g.restore();
+  g.save(); g.globalAlpha = 0.28 * c.sc * (1 - Math.min(0.7, c.jump * 2)); g.fillStyle = '#0a2b44'; E(g, fxp, fyp + 1, 0.4 * u * (pose === 'sleep' ? 1.05 : 1) * (pose === 'walk' && c.run ? 1 + 0.3 * c.mv : 1), 0.085 * u); g.fill(); g.restore();
   g.save(); g.translate(fxp + dx, fyp - jp - lift); g.rotate(rot); g.scale(sx * c.sc, sy * c.sc); g.drawImage(s, -w / 2, -h, w, h); { const ac = accOf(c.v), wr = (pose === 'sleep' || pose === 'roll') ? '' : wearOf(c.v), an = ANCH[name]; if (an) { if (wr) drawWear(g, wr, -w / 2 + an[0] * w, -h + an[1] * h, an[2] * w); if (ac) drawAcc(g, ac, -w / 2 + an[0] * w, -h + an[1] * h, an[2] * w); } } g.restore();
   if (withTag && c.block && c.state !== 'spawn' && c.state !== 'sink' && c.state !== 'gone' && c.state !== 'leave') drawBubbleTag(g, fxp, fyp - jp - lift - h * c.sc * sy - 5, c.block.remaining.length, c.block.color, c.blocked ? 0.75 : 1);
 }
@@ -1494,7 +1525,7 @@ function updateDemo(c, dt) {
   else if (c.state === 'hop') { eye = 'happy'; mouth = 0.5; jump = Math.abs(Math.sin(c.t * 9)) * 0.5; if (c.t > 1.0) { c.state = 'idle'; c.t = 0; c.next = 1 + Math.random() * 2; sfx.meow(); } if (Math.random() < dt * 8) P({ type: 'heart', x: X(c.x), y: Y(c.y + FEET) - CATU * S, vx: (Math.random() - 0.5) * 30, vy: -50, g: 40, size: 8, color: '#ff7ab8', life: 0.9 }); }
   else if (c.state === 'go') { moving = true; stepMove(c, c.dst[0], c.dst[1], c.run ? 22 : 12, dt); if (Math.hypot(c.dst[0] - c.x, c.dst[1] - c.y) < 0.3) { c.state = 'idle'; c.t = 0; c.next = 1 + Math.random() * 2; } }
   c.sit += (wantSit - c.sit) * Math.min(1, dt * 7); c.fs += (c.face - c.fs) * Math.min(1, dt * 16); c.mv += ((moving ? 1 : 0) - c.mv) * Math.min(1, dt * 14);
-  c.wph += dt * (c.run ? 20 : 14) * c.mv; c.bob = (c.run ? 0 : Math.abs(Math.sin(c.wph)) * 0.04 * c.mv); c.jump = jump + (c.run ? Math.abs(Math.sin(c.wph * 0.5)) * 0.13 * c.mv : 0);
+  c.wph += dt * (c.run ? 27 : 14) * c.mv; c.bob = (c.run ? 0 : Math.abs(Math.sin(c.wph)) * 0.04 * c.mv); c.jump = jump;
   c.sq = 1 + Math.sin(c.wph * 2) * 0.025 * c.mv; c.tilt = c.fx * 0.14 * c.mv + (c.sit > 0.5 ? Math.sin(c.time * 1.5) * 0.04 + 0.1 * c.sit : 0);
   c.nextBlink -= dt; if (c.nextBlink < 0) { c.blink = 0.13; c.nextBlink = 1.6 + Math.random() * 2.6; } if (c.blink > 0) c.blink -= dt;
   c.earT -= dt; if (c.earT < 0) { c.ear = 0.35; c.earT = 2 + Math.random() * 4; } c.ear *= Math.pow(0.04, dt);
@@ -1502,7 +1533,7 @@ function updateDemo(c, dt) {
   if (c.mv > 0.5 && c.run) { c.dust -= dt; if (c.dust < 0) { c.dust = 0.07; P({ type: 'dust', x: X(c.x), y: Y(c.y + FEET) - 2, vx: -c.lookX * 20, vy: -8, size: 4, life: 0.45 }); } }
 }
 /* ================= flow ================= */
-function clearGame() { game.cats.forEach(() => {}); pieces.length = 0; parts.length = 0; document.querySelectorAll('.fly').forEach(e => e.remove()); }
+function clearGame() { try { if (game && game.duck) { setMusicLevel(game.duck); game.duck = 0; } } catch (e) {} game.cats.forEach(() => {}); pieces.length = 0; parts.length = 0; document.querySelectorAll('.fly').forEach(e => e.remove()); }
 function showBoard(a) { art = a; removed = new Uint8Array(N); introT = 0; if (cw) buildTiles(); }
 function startLevel(idx) {
   clearGame(); closeAll(); levelIdx = idx; paused = false; demo = [];
